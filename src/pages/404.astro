@@ -1,0 +1,134 @@
+---
+import BaseHead from "../components/BaseHead.astro";
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead 
+			title="Page Not Found | Zyoruk" 
+			description="The page you're looking for doesn't exist. Explore other content on the blog." 
+		/>
+	</head>
+	<body>
+		<Header />
+		<main class="error-page">
+			<div class="container">
+				<div class="error-content">
+					<div class="error-animation">
+						<div class="error-code">404</div>
+						<div class="error-illustration">
+							<span class="material-icons">search_off</span>
+						</div>
+					</div>
+					<h1>Page Not Found</h1>
+					<p class="error-message">
+						The page you're looking for seems to have wandered off into the digital void. 
+						But don't worry, there's plenty more to explore!
+					</p>
+					<div class="error-actions">
+						<a href="/" class="btn btn-primary">
+							<span class="material-icons">home</span>
+							Back to Home
+						</a>
+						<a href="/blog" class="btn btn-secondary">
+							<span class="material-icons">article</span>
+							Browse Blog
+						</a>
+					</div>
+				</div>
+			</div>
+		</main>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	.error-page {
+		min-height: 70vh;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: var(--space-2xl) 0;
+	}
+
+	.error-content {
+		text-align: center;
+		max-width: 600px;
+	}
+
+	.error-animation {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: var(--space-lg);
+		margin-bottom: var(--space-xl);
+	}
+
+	.error-code {
+		font-size: clamp(4rem, 8vw, 8rem);
+		font-weight: 300;
+		color: var(--md-sys-color-primary);
+		line-height: 1;
+		letter-spacing: -0.02em;
+	}
+
+	.error-illustration {
+		animation: float 3s ease-in-out infinite;
+	}
+
+	.error-illustration .material-icons {
+		font-size: 4rem;
+		color: var(--md-sys-color-on-surface-variant);
+		opacity: 0.6;
+	}
+
+	@keyframes float {
+		0%, 100% { transform: translateY(0px); }
+		50% { transform: translateY(-10px); }
+	}
+
+	.error-page h1 {
+		font-size: clamp(2rem, 4vw, 3rem);
+		margin-bottom: var(--space-md);
+		color: var(--md-sys-color-on-surface);
+	}
+
+	.error-message {
+		font-size: 1.125rem;
+		color: var(--md-sys-color-on-surface-variant);
+		line-height: 1.6;
+		margin-bottom: var(--space-xl);
+	}
+
+	.error-actions {
+		display: flex;
+		gap: var(--space-md);
+		justify-content: center;
+		flex-wrap: wrap;
+	}
+
+	.error-actions .btn {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--space-xs);
+	}
+
+	@media (max-width: 768px) {
+		.error-animation {
+			flex-direction: column;
+			gap: var(--space-md);
+		}
+
+		.error-code {
+			font-size: clamp(3rem, 12vw, 6rem);
+		}
+
+		.error-actions {
+			flex-direction: column;
+			align-items: center;
+		}
+	}
+</style> 

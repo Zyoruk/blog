@@ -1,18 +1,49 @@
 {
-  "name": "",
+  "name": "zyoruk-blog",
   "type": "module",
-  "version": "0.0.1",
+  "version": "1.0.0",
+  "description": "Personal blog of Zyoruk - Software Engineer & Tech Leader",
+  "author": "Zyoruk",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zyoruk/blog-v2.git"
+  },
+  "keywords": [
+    "blog",
+    "astro",
+    "software-engineering",
+    "tech",
+    "pwa"
+  ],
+  "engines": {
+    "node": ">=18.20.8"
+  },
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "lighthouse": "npx lighthouse http://localhost:4321 --output=html --output-path=./lighthouse-report.html",
+    "perf-test": "npm run build && npm run preview",
+    "type-check": "tsc --noEmit",
+    "check": "astro check",
+    "lint": "npx @biomejs/biome check src/",
+    "format": "npx @biomejs/biome format src/ --write",
+    "clean": "rm -rf dist .astro",
+    "analyze": "npx astro build --experimental-content-intellisense"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.0",
     "@astrojs/rss": "^4.0.12",
     "@astrojs/sitemap": "^3.4.1",
+    "@material/web": "^2.3.0",
     "astro": "^5.9.2",
     "sharp": "^0.34.2"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.3",
+    "@biomejs/biome": "^1.9.4",
+    "typescript": "^5.6.3"
   }
 }

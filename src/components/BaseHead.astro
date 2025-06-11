@@ -1,10 +1,10 @@
 ---
 // Import the global.css file here so that it is included on
 // all pages through the use of the <BaseHead /> component.
-import '../styles/global.css';
-import { SITE_TITLE } from '../consts';
-import FallbackImage from '../assets/blog-placeholder-1.jpg';
-import type { ImageMetadata } from 'astro';
+import "../styles/global.css";
+import type { ImageMetadata } from "astro";
+import FallbackImage from "../assets/blog-placeholder-1.jpg";
+import { SITE_TITLE } from "../consts";
 
 interface Props {
 	title: string;
@@ -20,6 +20,9 @@ const { title, description, image = FallbackImage } = Astro.props;
 <!-- Global Metadata -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+<!-- Security headers are now configured at server level in astro.config.mjs -->
+
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="sitemap" href="/sitemap-index.xml" />
 <link
@@ -30,9 +33,22 @@ const { title, description, image = FallbackImage } = Astro.props;
 />
 <meta name="generator" content={Astro.generator} />
 
-<!-- Font preloads -->
-<link rel="preload" href="/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin />
-<link rel="preload" href="/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin />
+<!-- PWA Support -->
+<link rel="manifest" href="/manifest.json" />
+<meta name="theme-color" content="#8B9A8C" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="Zyoruk" />
+
+<!-- Optimized Font Loading -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Consolidated font loading with display=swap for better performance -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<!-- Material Icons with display=swap -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons&display=swap" rel="stylesheet">
+
+<!-- Remove old font preloads that are no longer used -->
 
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />
@@ -55,3 +71,18 @@ const { title, description, image = FallbackImage } = Astro.props;
 <meta property="twitter:title" content={title} />
 <meta property="twitter:description" content={description} />
 <meta property="twitter:image" content={new URL(image.src, Astro.url)} />
+
+<!-- Service Worker Registration -->
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+        .then((registration) => {
+          console.log('SW registered: ', registration);
+        })
+        .catch((registrationError) => {
+          console.log('SW registration failed: ', registrationError);
+        });
+    });
+  }
+</script>

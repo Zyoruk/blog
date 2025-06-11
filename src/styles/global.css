@@ -4,152 +4,484 @@
   License MIT: https://github.com/HermanMartinus/bearblog/blob/master/LICENSE.md
  */
 
+/*
+  Inspired by Moon Journal - A spiritual blog theme with Material Design 3
+  Colors inspired by moonlight, nature, and spiritual wellness
+*/
+
+/* Material Design 3 Global Styles - Moon Journal Theme */
+
 :root {
-	--accent: #2337ff;
-	--accent-dark: #000d8a;
-	--black: 15, 18, 25;
-	--gray: 96, 115, 159;
-	--gray-light: 229, 233, 240;
-	--gray-dark: 34, 41, 57;
-	--gray-gradient: rgba(var(--gray-light), 50%), #fff;
-	--box-shadow:
-		0 2px 6px rgba(var(--gray), 25%), 0 8px 24px rgba(var(--gray), 33%),
-		0 16px 32px rgba(var(--gray), 33%);
+	/* Moon Journal Inspired Color Palette */
+	--md-sys-color-primary: #8b9a8c;
+	--md-sys-color-on-primary: #ffffff;
+	--md-sys-color-primary-container: #e8f0e9;
+	--md-sys-color-on-primary-container: #2a4a2f;
+
+	--md-sys-color-secondary: #a8855c;
+	--md-sys-color-on-secondary: #ffffff;
+	--md-sys-color-secondary-container: #f2e6d7;
+	--md-sys-color-on-secondary-container: #3d2a16;
+
+	--md-sys-color-tertiary: #9b7b8e;
+	--md-sys-color-on-tertiary: #ffffff;
+	--md-sys-color-tertiary-container: #f0e2ed;
+	--md-sys-color-on-tertiary-container: #3f2235;
+
+	--md-sys-color-error: #d32f2f;
+	--md-sys-color-on-error: #ffffff;
+	--md-sys-color-error-container: #fdeaea;
+	--md-sys-color-on-error-container: #410e0b;
+
+	--md-sys-color-outline: #b0a599;
+	--md-sys-color-background: #fffcf8;
+	--md-sys-color-on-background: #2c2b28;
+	--md-sys-color-surface: #fffcf8;
+	--md-sys-color-on-surface: #2c2b28;
+	--md-sys-color-surface-variant: #f5f2ed;
+	--md-sys-color-on-surface-variant: #4a4640;
+	--md-sys-color-surface-container: #f8f4f0;
+	--md-sys-color-surface-container-high: #f2eee9;
+	--md-sys-color-surface-container-highest: #ede9e4;
+
+	--md-sys-color-inverse-surface: #414037;
+	--md-sys-color-inverse-on-surface: #f7f3ee;
+	--md-sys-color-inverse-primary: #c5d4c6;
+	--md-sys-color-shadow: #000000;
+	--md-sys-color-surface-tint: #8b9a8c;
+	--md-sys-color-outline-variant: #d4c8bb;
+	--md-sys-color-scrim: #000000;
+
+	/* Spiritual accent colors */
+	--moon-color-sage: #a8b5a0;
+	--moon-color-lavender: #c8b9d9;
+	--moon-color-rose-quartz: #f4c2c2;
+	--moon-color-moonstone: #e8e3d3;
+	--moon-color-forest: #6b7a6e;
+	--moon-color-earth: #a67c5a;
+
+	/* Material Design 3 Elevation */
+	--md-sys-elevation-level0: none;
+	--md-sys-elevation-level1: 0 1px 3px 0 rgba(0, 0, 0, 0.12), 0 1px 2px 0 rgba(0, 0, 0, 0.24);
+	--md-sys-elevation-level2: 0 3px 6px 0 rgba(0, 0, 0, 0.16), 0 2px 4px 0 rgba(0, 0, 0, 0.23);
+	--md-sys-elevation-level3: 0 6px 12px 0 rgba(0, 0, 0, 0.15), 0 4px 6px 0 rgba(0, 0, 0, 0.18);
+	--md-sys-elevation-level4: 0 8px 16px 0 rgba(0, 0, 0, 0.15), 0 6px 8px 0 rgba(0, 0, 0, 0.18);
+	--md-sys-elevation-level5: 0 12px 24px 0 rgba(0, 0, 0, 0.15), 0 8px 12px 0 rgba(0, 0, 0, 0.18);
+
+	/* Material Design 3 Shape */
+	--md-sys-shape-corner-extra-small: 4px;
+	--md-sys-shape-corner-small: 8px;
+	--md-sys-shape-corner-medium: 12px;
+	--md-sys-shape-corner-large: 16px;
+	--md-sys-shape-corner-extra-large: 28px;
+	--md-sys-shape-corner-full: 50%;
+
+	/* Custom spacing for spiritual design */
+	--space-xs: 0.5rem;
+	--space-sm: 1rem;
+	--space-md: 1.5rem;
+	--space-lg: 2rem;
+	--space-xl: 3rem;
+	--space-2xl: 4rem;
 }
-@font-face {
-	font-family: 'Atkinson';
-	src: url('/fonts/atkinson-regular.woff') format('woff');
-	font-weight: 400;
-	font-style: normal;
-	font-display: swap;
+
+/* Base Styles */
+* {
+	box-sizing: border-box;
 }
-@font-face {
-	font-family: 'Atkinson';
-	src: url('/fonts/atkinson-bold.woff') format('woff');
-	font-weight: 700;
-	font-style: normal;
-	font-display: swap;
-}
+
 body {
-	font-family: 'Atkinson', sans-serif;
+	font-family: "Inter", "Roboto", -apple-system, BlinkMacSystemFont, sans-serif;
 	margin: 0;
 	padding: 0;
-	text-align: left;
-	background: linear-gradient(var(--gray-gradient)) no-repeat;
-	background-size: 100% 600px;
-	word-wrap: break-word;
-	overflow-wrap: break-word;
-	color: rgb(var(--gray-dark));
-	font-size: 20px;
-	line-height: 1.7;
+	background-color: var(--md-sys-color-background);
+	color: var(--md-sys-color-on-background);
+	font-size: 16px;
+	line-height: 1.6;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	font-weight: 400;
 }
-main {
-	width: 720px;
-	max-width: calc(100% - 2em);
-	margin: auto;
-	padding: 3em 1em;
-}
+
+/* Typography - Moon Journal inspired */
 h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
-	margin: 0 0 0.5rem 0;
-	color: rgb(var(--black));
-	line-height: 1.2;
+	margin: 0 0 var(--space-md) 0;
+	color: var(--md-sys-color-on-background);
+	line-height: 1.3;
+	font-weight: 500;
+	letter-spacing: -0.01em;
 }
+
 h1 {
-	font-size: 3.052em;
+	font-size: clamp(2.5rem, 5vw, 4rem);
+	font-weight: 300;
+	letter-spacing: -0.02em;
+	line-height: 1.1;
 }
+
 h2 {
-	font-size: 2.441em;
+	font-size: clamp(2rem, 4vw, 3rem);
+	font-weight: 400;
+	letter-spacing: -0.015em;
 }
+
 h3 {
-	font-size: 1.953em;
+	font-size: clamp(1.5rem, 3vw, 2.25rem);
+	font-weight: 500;
 }
+
 h4 {
-	font-size: 1.563em;
+	font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+	font-weight: 500;
 }
+
 h5 {
-	font-size: 1.25em;
+	font-size: clamp(1.125rem, 2vw, 1.5rem);
+	font-weight: 500;
 }
-strong,
-b {
-	font-weight: 700;
+
+h6 {
+	font-size: clamp(1rem, 1.5vw, 1.25rem);
+	font-weight: 500;
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
 }
-a {
-	color: var(--accent);
-}
-a:hover {
-	color: var(--accent);
-}
+
 p {
-	margin-bottom: 1em;
+	margin: 0 0 var(--space-md) 0;
+	font-size: 1rem;
+	line-height: 1.7;
+	letter-spacing: 0.01em;
+	color: var(--md-sys-color-on-surface);
 }
-.prose p {
-	margin-bottom: 2em;
+
+.lead {
+	font-size: 1.25rem;
+	font-weight: 300;
+	line-height: 1.6;
+	color: var(--md-sys-color-on-surface-variant);
 }
-textarea {
-	width: 100%;
-	font-size: 16px;
+
+/* Links */
+a {
+	color: var(--md-sys-color-primary);
+	text-decoration: none;
+	transition: all 0.2s ease;
+	position: relative;
 }
-input {
-	font-size: 16px;
+
+a:hover {
+	color: var(--md-sys-color-primary);
 }
-table {
-	width: 100%;
+
+a:hover::after {
+	content: "";
+	position: absolute;
+	bottom: -2px;
+	left: 0;
+	right: 0;
+	height: 1px;
+	background: var(--md-sys-color-primary);
+	opacity: 0.6;
 }
+
+/* Buttons - Material Design inspired */
+.btn {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--space-xs);
+	padding: 12px 24px;
+	border: none;
+	border-radius: var(--md-sys-shape-corner-extra-large);
+	font-family: inherit;
+	font-size: 0.875rem;
+	font-weight: 500;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	text-decoration: none;
+	position: relative;
+	overflow: hidden;
+}
+
+.btn-primary {
+	background: var(--md-sys-color-primary);
+	color: var(--md-sys-color-on-primary);
+	box-shadow: var(--md-sys-elevation-level1);
+}
+
+.btn-primary:hover {
+	background: var(--moon-color-forest);
+	color: var(--md-sys-color-on-primary);
+	box-shadow: var(--md-sys-elevation-level2);
+	transform: translateY(-1px);
+}
+
+.btn-primary:hover::after {
+	display: none;
+}
+
+.btn-secondary {
+	background: var(--md-sys-color-secondary-container);
+	color: var(--md-sys-color-on-secondary-container);
+	border: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.btn-secondary:hover {
+	background: var(--md-sys-color-secondary);
+	color: var(--md-sys-color-on-secondary);
+	box-shadow: var(--md-sys-elevation-level1);
+	border-color: var(--md-sys-color-secondary);
+}
+
+.btn-secondary:hover::after {
+	display: none;
+}
+
+.btn-small {
+	padding: 0.5rem 1rem;
+	font-size: 0.875rem;
+	border-radius: var(--md-sys-shape-corner-small);
+}
+
+/* Code and Pre */
+code {
+	font-family: "JetBrains Mono", "Roboto Mono", monospace;
+	padding: 0.25em 0.5em;
+	background-color: var(--md-sys-color-surface-container-high);
+	border-radius: var(--md-sys-shape-corner-small);
+	font-size: 0.875em;
+	color: var(--md-sys-color-on-surface-variant);
+	border: 1px solid var(--md-sys-color-outline-variant);
+}
+
+pre {
+	padding: var(--space-md);
+	background-color: var(--md-sys-color-surface-container);
+	border-radius: var(--md-sys-shape-corner-medium);
+	overflow-x: auto;
+	border: 1px solid var(--md-sys-color-outline-variant);
+}
+
+pre > code {
+	padding: 0;
+	background: none;
+	border: none;
+	font-size: 0.875rem;
+	line-height: 1.5;
+}
+
+/* Blockquotes - Spiritual styling */
+blockquote {
+	margin: var(--space-lg) 0;
+	padding: var(--space-md) var(--space-lg);
+	border-left: 4px solid var(--moon-color-sage);
+	background: linear-gradient(
+		135deg,
+		var(--md-sys-color-surface-container) 0%,
+		var(--md-sys-color-surface-container-high) 100%
+	);
+	border-radius: var(--md-sys-shape-corner-medium);
+	font-style: italic;
+	color: var(--md-sys-color-on-surface-variant);
+	position: relative;
+}
+
+blockquote::before {
+	content: '"';
+	font-size: 4rem;
+	color: var(--moon-color-sage);
+	position: absolute;
+	top: -0.5rem;
+	left: var(--space-sm);
+	opacity: 0.3;
+	font-family: serif;
+}
+
+/* Images */
 img {
 	max-width: 100%;
 	height: auto;
-	border-radius: 8px;
+	border-radius: var(--md-sys-shape-corner-medium);
+	box-shadow: var(--md-sys-elevation-level1);
 }
-code {
-	padding: 2px 5px;
-	background-color: rgb(var(--gray-light));
-	border-radius: 2px;
+
+/* Cards - Moon Journal inspired */
+.card {
+	background: var(--md-sys-color-surface-container);
+	border-radius: var(--md-sys-shape-corner-large);
+	padding: var(--space-lg);
+	box-shadow: var(--md-sys-elevation-level1);
+	border: 1px solid var(--md-sys-color-outline-variant);
+	transition: all 0.3s ease;
 }
-pre {
-	padding: 1.5em;
-	border-radius: 8px;
+
+.card:hover {
+	box-shadow: var(--md-sys-elevation-level2);
+	transform: translateY(-2px);
+	border-color: var(--md-sys-color-outline);
 }
-pre > code {
-	all: unset;
+
+/* Tables */
+table {
+	width: 100%;
+	border-collapse: collapse;
+	margin: var(--space-lg) 0;
+	border-radius: var(--md-sys-shape-corner-medium);
+	overflow: hidden;
+	box-shadow: var(--md-sys-elevation-level1);
 }
-blockquote {
-	border-left: 4px solid var(--accent);
-	padding: 0 0 0 20px;
-	margin: 0px;
-	font-size: 1.333em;
+
+th,
+td {
+	padding: var(--space-md);
+	border-bottom: 1px solid var(--md-sys-color-outline-variant);
+	text-align: left;
 }
+
+th {
+	background-color: var(--md-sys-color-surface-container-high);
+	color: var(--md-sys-color-on-surface-variant);
+	font-weight: 500;
+	font-size: 0.875rem;
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+}
+
+/* Form Elements */
+input,
+textarea,
+select {
+	font-family: inherit;
+	font-size: 1rem;
+	padding: var(--space-md);
+	border: 2px solid var(--md-sys-color-outline-variant);
+	border-radius: var(--md-sys-shape-corner-medium);
+	background-color: var(--md-sys-color-surface);
+	color: var(--md-sys-color-on-surface);
+	transition: all 0.2s ease;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+	outline: none;
+	border-color: var(--md-sys-color-primary);
+	box-shadow: 0 0 0 3px rgba(107, 115, 255, 0.1);
+}
+
+/* Horizontal Rule */
 hr {
 	border: none;
-	border-top: 1px solid rgb(var(--gray-light));
+	height: 1px;
+	background: linear-gradient(90deg, transparent, var(--md-sys-color-outline-variant), transparent);
+	margin: var(--space-xl) 0;
 }
-@media (max-width: 720px) {
-	body {
-		font-size: 18px;
+
+/* Utility Classes */
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+.container {
+	width: 100%;
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 0 var(--space-md);
+}
+
+.container-narrow {
+	width: 100%;
+	max-width: 800px;
+	margin: 0 auto;
+	padding: 0 var(--space-md);
+}
+
+.text-center {
+	text-align: center;
+}
+.text-left {
+	text-align: left;
+}
+.text-right {
+	text-align: right;
+}
+
+.mb-0 {
+	margin-bottom: 0;
+}
+.mb-sm {
+	margin-bottom: var(--space-sm);
+}
+.mb-md {
+	margin-bottom: var(--space-md);
+}
+.mb-lg {
+	margin-bottom: var(--space-lg);
+}
+.mb-xl {
+	margin-bottom: var(--space-xl);
+}
+
+.mt-0 {
+	margin-top: 0;
+}
+.mt-sm {
+	margin-top: var(--space-sm);
+}
+.mt-md {
+	margin-top: var(--space-md);
+}
+.mt-lg {
+	margin-top: var(--space-lg);
+}
+.mt-xl {
+	margin-top: var(--space-xl);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+	:root {
+		--space-xs: 0.375rem;
+		--space-sm: 0.75rem;
+		--space-md: 1rem;
+		--space-lg: 1.5rem;
+		--space-xl: 2rem;
+		--space-2xl: 2.5rem;
 	}
-	main {
-		padding: 1em;
+
+	body {
+		font-size: 14px;
 	}
 }
 
-.sr-only {
-	border: 0;
-	padding: 0;
-	margin: 0;
-	position: absolute !important;
-	height: 1px;
-	width: 1px;
-	overflow: hidden;
-	/* IE6, IE7 - a 0 height clip, off to the bottom right of the visible 1px box */
-	clip: rect(1px 1px 1px 1px);
-	/* maybe deprecated but we need to support legacy browsers */
-	clip: rect(1px, 1px, 1px, 1px);
-	/* modern browsers, clip-path works inwards from each corner */
-	clip-path: inset(50%);
-	/* added line to stop words getting smushed together (as they go onto separate lines and some screen readers do not understand line feeds as a space */
-	white-space: nowrap;
+/* Smooth scrolling */
+html {
+	scroll-behavior: smooth;
+}
+
+/* Selection styling */
+::selection {
+	background: var(--md-sys-color-primary-container);
+	color: var(--md-sys-color-on-primary-container);
+}
+
+/* Focus visible */
+:focus-visible {
+	outline: 2px solid var(--md-sys-color-primary);
+	outline-offset: 2px;
 }

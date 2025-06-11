@@ -1,0 +1,34 @@
+{
+  "name": "Zyoruk - Software Engineer & Tech Leader",
+  "short_name": "Zyoruk",
+  "description": "Software Engineer focused on building clean, scalable, and maintainable software. Insights on React, Next.js, system architecture, and engineering leadership.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFFCF8",
+  "theme_color": "#8B9A8C",
+  "orientation": "portrait-primary",
+  "categories": ["technology", "software", "engineering", "blog"],
+  "lang": "en",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshot_wide.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "/screenshot_narrow.png", 
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow"
+    }
+  ]
+} 

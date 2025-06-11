@@ -1,0 +1,85 @@
+---
+// Only load in production or when explicitly enabled
+const shouldLoadVitals = import.meta.env.PROD || import.meta.env.WEB_VITALS_ENABLED === "true";
+---
+
+{shouldLoadVitals && (
+  <script>
+    // Dynamic import to reduce bundle size
+    async function loadWebVitals() {
+      try {
+        const { onCLS, onFCP, onLCP, onTTFB } = await import('web-vitals');
+
+        // Send metrics to analytics endpoint
+        function sendToAnalytics(metric: any) {
+          // Replace with your analytics endpoint
+          console.log('[Web Vitals]', metric.name, metric.value);
+          
+          // Example: Send to Google Analytics 4
+          if (typeof (window as any).gtag !== 'undefined') {
+            (window as any).gtag('event', metric.name, {
+              custom_parameter_1: Math.round(metric.value),
+              custom_parameter_2: metric.id,
+              custom_parameter_3: metric.name
+            });
+          }
+          
+          // Example: Send to your own endpoint
+          if (navigator.sendBeacon) {
+            navigator.sendBeacon('/api/vitals', JSON.stringify(metric));
+          }
+        }
+
+        // Register all Web Vitals
+        onCLS(sendToAnalytics);
+        onFCP(sendToAnalytics);
+        onLCP(sendToAnalytics);
+        onTTFB(sendToAnalytics);
+      } catch (error) {
+        console.warn('Failed to load web-vitals:', error);
+      }
+    }
+
+    // Load web-vitals after page load to avoid blocking
+    if (document.readyState === 'complete') {
+      loadWebVitals();
+    } else {
+      window.addEventListener('load', loadWebVitals);
+    }
+    
+    // Performance observer for additional metrics (lightweight, no external deps)
+    if ('PerformanceObserver' in window) {
+      const observer = new PerformanceObserver((list) => {
+        list.getEntries().forEach((entry) => {
+          if (entry.entryType === 'navigation') {
+            const navEntry = entry as PerformanceNavigationTiming;
+            console.log('[Navigation Timing]', {
+              domContentLoaded: navEntry.domContentLoadedEventEnd - navEntry.domContentLoadedEventStart,
+              loadComplete: navEntry.loadEventEnd - navEntry.loadEventStart,
+              firstByte: navEntry.responseStart - navEntry.requestStart
+            });
+          }
+        });
+      });
+      
+      observer.observe({ type: 'navigation', buffered: true });
+    }
+  </script>
+)}
+
+<script>
+  // Basic performance monitoring that runs in all environments
+  window.addEventListener('load', () => {
+    // Measure and log page load time
+    const loadTime = performance.now();
+    console.log(`[Performance] Page loaded in ${Math.round(loadTime)}ms`);
+    
+    // Log paint timings
+    if ('getEntriesByType' in performance) {
+      const paintEntries = performance.getEntriesByType('paint');
+      paintEntries.forEach((entry) => {
+        console.log(`[Performance] ${entry.name}: ${Math.round(entry.startTime)}ms`);
+      });
+    }
+  });
+</script> 
