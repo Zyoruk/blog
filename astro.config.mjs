@@ -7,11 +7,8 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
 	site: 'https://blog.devpand.com',
 	integrations: [mdx(), sitemap()],
-	vite: {
-		define: {
-			__DATE__: `'${new Date().toISOString()}'`,
-		},
-	},
+	// `astro dev` only — a static build serves no headers of its own.
+	// Production headers live in customHttp.yml; keep the two in sync.
 	server: {
 		headers: {
 			'X-Content-Type-Options': 'nosniff',
