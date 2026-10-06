@@ -212,3 +212,31 @@ td {
 	clip: rect(0 0 0 0);
 	white-space: nowrap;
 }
+
+/* Scroll reveal: motion.ts adds .pending only to elements below the fold. */
+[data-reveal] {
+	transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+[data-reveal].pending {
+	opacity: 0;
+	transform: translateY(16px);
+}
+
+/* Native cross-document page transitions. Browsers without support just navigate. */
+@view-transition {
+	/* biome-ignore lint/correctness/noUnknownProperty: valid in @view-transition, unknown to Biome 1.9 */
+	navigation: auto;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+	animation-duration: 0.25s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	@view-transition {
+		/* biome-ignore lint/correctness/noUnknownProperty: valid in @view-transition, unknown to Biome 1.9 */
+		navigation: none;
+	}
+}

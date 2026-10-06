@@ -1,0 +1,399 @@
+---
+import { layoutGraph } from "../graph";
+import type { WritingItem } from "../writing";
+import GraphSvg from "./GraphSvg.astro";
+
+interface Props {
+	items: WritingItem[];
+}
+
+const { items } = Astro.props;
+const wide = layoutGraph(items, 960, 560, 30);
+const tall = layoutGraph(items, 420, 640, 16);
+
+const essays = items.filter((item) => item.kind === "essay").length;
+const notes = items.length - essays;
+const tags = new Set(items.flatMap((item) => item.tags ?? [])).size;
+const pad = (label: string, n: number) =>
+	`> ${label} ${".".repeat(Math.max(2, 22 - label.length))} ${n}`;
+const bootLines = [
+	"> booting ~/zyoruk",
+	pad("loading essays", essays),
+	pad("loading notes", notes),
+	pad("linking tags", tags),
+	"> ready",
+];
+---
+
+<!-- Decide before the hero paints whether to play the boot intro: once per visit, never with reduced motion. -->
+<script is:inline>
+	(() => {
+		let seen = false;
+		try {
+			seen = sessionStorage.getItem("booted") === "1";
+		} catch {}
+		if (seen || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+		const root = document.documentElement;
+		root.dataset.intro = "play";
+		// Safety net: never leave the graph hidden if the animation script fails.
+		setTimeout(() => delete root.dataset.intro, 8000);
+	})();
+</script>
+
+<section class="hero" data-hero>
+	<p class="hud top">
+		<span class="prompt">~/garden</span>
+		<span>{essays} essays · {notes} {notes === 1 ? "note" : "notes"} · {tags} tags</span>
+	</p>
+
+	<GraphSvg layout={wide} width={960} height={560} class="wide" />
+	<GraphSvg layout={tall} width={420} height={640} class="tall" />
+
+	<pre class="boot" aria-hidden="true">{bootLines.map((line, i) => (
+		<span style={`--n: ${line.length}; --i: ${i}`}>{line}</span>
+	))}</pre>
+
+	<div class="card" role="status" hidden>
+		<p class="card-meta"></p>
+		<p class="card-title"></p>
+		<p class="card-desc"></p>
+	</div>
+
+	<p class="hud bottom">
+		<span class="legend">
+			<span class="k essay">essay</span>
+			<span class="k note">note</span>
+			<span class="k tag">tag</span>
+			<span class="k page">page</span>
+		</span>
+		<a href="#about" class="down">↓ about me</a>
+	</p>
+</section>
+
+<script>
+	import { initGarden } from "../scripts/garden";
+	initGarden();
+</script>
+
+<style>
+	.hero {
+		--h-bg: #111317;
+		--h-ink: #e2e8f0;
+		--h-muted: #8b95a5;
+		--h-line: #2a303a;
+		--h-cyan: #66d9ed;
+		--h-lime: #a4d92c;
+
+		position: relative;
+		height: calc(100svh - 3.5rem);
+		min-height: 520px;
+		max-height: 900px;
+		overflow: hidden;
+		background-color: var(--h-bg);
+		background-image:
+			radial-gradient(600px circle at var(--gx, 50%) var(--gy, 50%), rgb(102 217 237 / 0.09), transparent 60%),
+			radial-gradient(rgb(255 255 255 / 0.07) 1px, transparent 1px);
+		background-size:
+			auto,
+			22px 22px;
+		color: var(--h-ink);
+		font-family: var(--mono);
+	}
+
+	.graph {
+		position: absolute;
+		inset: 3rem 1rem;
+		width: calc(100% - 2rem);
+		height: calc(100% - 6rem);
+	}
+
+	.graph.tall {
+		display: none;
+	}
+
+	@media (max-width: 700px) {
+		.graph.wide {
+			display: none;
+		}
+		.graph.tall {
+			display: block;
+		}
+	}
+
+	/* Graph marks. :global because they're rendered by GraphSvg. */
+	.hero :global(.edge) {
+		stroke: var(--h-line);
+		stroke-width: 1.2;
+		stroke-dasharray: 1;
+		transition:
+			stroke 0.2s,
+			opacity 0.2s;
+	}
+
+	.hero :global(.node) {
+		transform-box: view-box;
+		transform-origin: 0 0;
+		transition: opacity 0.2s;
+		outline: none;
+	}
+
+	.hero :global(.node text) {
+		fill: var(--h-muted);
+		font-size: 13px;
+		transition: fill 0.2s;
+	}
+
+	.hero :global(.essay circle) {
+		fill: var(--h-cyan);
+	}
+
+	.hero :global(.note circle) {
+		fill: var(--h-lime);
+	}
+
+	.hero :global(.draft circle) {
+		fill: var(--h-bg);
+		stroke: var(--h-lime);
+		stroke-width: 1.5;
+		stroke-dasharray: 2.5 2;
+	}
+
+	.hero :global(.tag circle) {
+		fill: var(--h-bg);
+		stroke: var(--h-cyan);
+		stroke-width: 1.5;
+	}
+
+	.hero :global(.tag text) {
+		fill: var(--h-cyan);
+	}
+
+	.hero :global(.page rect) {
+		fill: var(--h-bg);
+		stroke: var(--h-ink);
+		stroke-width: 1.5;
+	}
+
+	.hero :global(.halo) {
+		fill: none;
+		stroke: var(--h-cyan);
+		stroke-opacity: 0.35;
+		animation: pulse 3s ease-in-out infinite;
+	}
+
+	.hero :global(.cursor) {
+		animation: blink 1.1s steps(1) infinite;
+	}
+
+	.hero :global(.node:hover text),
+	.hero :global(.node:focus-visible text),
+	.hero :global(.lit text) {
+		fill: var(--h-ink);
+	}
+
+	.hero :global(.node:focus-visible circle),
+	.hero :global(.node:focus-visible rect) {
+		stroke: #fff;
+		stroke-width: 2;
+	}
+
+	/* Hovering a node dims everything that isn't connected to it. */
+	.hero :global(.graph.focus .node:not(.lit, .center)) {
+		opacity: 0.25;
+	}
+
+	.hero :global(.graph.focus .edge.lit) {
+		stroke: var(--h-cyan);
+	}
+
+	.hero :global(.graph.focus .edge:not(.lit)) {
+		opacity: 0.3;
+	}
+
+	/*
+	  Boot intro. "play" = waiting for the script: keep the graph hidden and the
+	  logo big. "run" = the script's animations own the graph. !important is
+	  needed to beat the inline transform; it is gone before animations start.
+	*/
+	:global([data-intro="play"]) .hero :global(.node:not(.center)),
+	:global([data-intro="play"]) .hero :global(.edge),
+	:global([data-intro="play"]) .hud {
+		opacity: 0;
+	}
+
+	:global([data-intro="play"]) .hero :global(.wide .center) {
+		transform: translate(480px, 280px) scale(3) !important;
+	}
+
+	:global([data-intro="play"]) .hero :global(.tall .center) {
+		transform: translate(210px, 320px) scale(2.4) !important;
+	}
+
+	.boot {
+		position: absolute;
+		left: 50%;
+		top: calc(50% + 10rem);
+		transform: translateX(-50%);
+		margin: 0;
+		background: none;
+		border: 0;
+		padding: 0;
+		font-size: 0.8125rem;
+		line-height: 1.7;
+		color: var(--h-muted);
+		display: none;
+	}
+
+	:global([data-intro]) .boot {
+		display: block;
+	}
+
+	.boot span {
+		display: block;
+		width: 0;
+		overflow: hidden;
+		white-space: pre;
+		animation: type calc(var(--n) * 9ms) steps(var(--n)) forwards;
+		animation-delay: calc(var(--i) * 190ms);
+	}
+
+	.boot span:last-child {
+		color: var(--h-lime);
+	}
+
+	@keyframes type {
+		to {
+			width: calc(var(--n) * 1ch);
+		}
+	}
+
+	@keyframes blink {
+		50% {
+			opacity: 0;
+		}
+	}
+
+	@keyframes pulse {
+		50% {
+			stroke-opacity: 0.08;
+		}
+	}
+
+	/* Preview card */
+	.card {
+		position: absolute;
+		z-index: 2;
+		width: min(18rem, calc(100% - 2rem));
+		padding: 0.75rem 0.9rem;
+		background: rgb(17 19 23 / 0.92);
+		border: 1px solid var(--h-line);
+		border-radius: var(--radius);
+		box-shadow: 0 8px 30px rgb(0 0 0 / 0.4);
+		backdrop-filter: blur(6px);
+		pointer-events: none;
+	}
+
+	.card p {
+		margin: 0;
+	}
+
+	.card-meta {
+		font-size: 0.75rem;
+		color: var(--h-lime);
+	}
+
+	.card-title {
+		font-family: var(--sans);
+		font-weight: 600;
+		color: var(--h-ink);
+		margin: 0.2rem 0 !important;
+		line-height: 1.35;
+	}
+
+	.card-desc {
+		font-family: var(--sans);
+		font-size: 0.875rem;
+		line-height: 1.5;
+		color: var(--h-muted);
+	}
+
+	/* HUD */
+	.hud {
+		position: absolute;
+		left: 0;
+		right: 0;
+		margin: 0;
+		padding: 0 1.25rem;
+		display: flex;
+		justify-content: space-between;
+		gap: 1rem;
+		font-size: 0.75rem;
+		color: var(--h-muted);
+		transition: opacity 0.6s;
+	}
+
+	.hud.top {
+		top: 1rem;
+	}
+
+	.hud.bottom {
+		bottom: 1rem;
+		align-items: center;
+	}
+
+	.prompt {
+		color: var(--h-lime);
+	}
+
+	.legend {
+		display: flex;
+		gap: 1rem;
+	}
+
+	.k::before {
+		content: "";
+		display: inline-block;
+		width: 8px;
+		height: 8px;
+		margin-right: 0.4rem;
+		border-radius: 50%;
+		vertical-align: 0;
+	}
+
+	.k.essay::before {
+		background: var(--h-cyan);
+	}
+	.k.note::before {
+		background: var(--h-lime);
+	}
+	.k.tag::before {
+		border: 1.5px solid var(--h-cyan);
+	}
+	.k.page::before {
+		border: 1.5px solid var(--h-ink);
+		border-radius: 2px;
+	}
+
+	.down {
+		color: var(--h-muted);
+		text-decoration: none;
+	}
+
+	.down:hover {
+		color: var(--h-ink);
+	}
+
+	@media (max-width: 480px) {
+		.hud.top span:last-child,
+		.legend .page {
+			display: none;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.hero :global(.halo),
+		.hero :global(.cursor) {
+			animation: none;
+		}
+	}
+</style>

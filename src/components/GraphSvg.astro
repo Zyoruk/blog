@@ -1,0 +1,78 @@
+---
+import type { layoutGraph } from "../graph";
+
+interface Props {
+	layout: ReturnType<typeof layoutGraph>;
+	width: number;
+	height: number;
+	class: string;
+}
+
+const { layout, width, height, class: className } = Astro.props;
+const LOGO_R = 30;
+---
+
+<svg
+	class:list={["graph", className]}
+	viewBox={`0 0 ${width} ${height}`}
+	role="group"
+	aria-label="Map of the writing: posts linked by topic"
+>
+	<g class="edges" aria-hidden="true">
+		{layout.edges.map((edge) => (
+			<line
+				class="edge"
+				data-a={edge.a}
+				data-b={edge.b}
+				x1={edge.x1}
+				y1={edge.y1}
+				x2={edge.x2}
+				y2={edge.y2}
+				pathLength="1"
+			/>
+		))}
+	</g>
+	<g class="nodes">
+		{layout.nodes.map((node) => {
+			const style = `transform: translate(${node.x}px, ${node.y}px)`;
+			if (node.type === "center") {
+				// The logo itself: a terminal prompt. The lime bar is the cursor.
+				return (
+					<g class="node center" data-id={node.id} style={style} aria-hidden="true">
+						<circle r={LOGO_R + 6} class="halo" />
+						<g transform={`scale(${LOGO_R / 1000}) translate(-1000 -1000)`}>
+							<circle cx="1000" cy="1000" r="1000" fill="#1e1e1e" />
+							<polygon
+								fill="#66d9ed"
+								points="500 437.67 500 687.67 1166.67 937.67 500 1187.67 500 1437.67 833.33 1312.67 1500 1062.67 1500 812.67 500 437.67"
+							/>
+							<polygon class="cursor" fill="#a4d92c" points="1500 1562.33 500 1437 500 1187.67 1500 1313 1500 1562.33" />
+						</g>
+					</g>
+				);
+			}
+			const left = node.x < layout.center.x;
+			return (
+				<a
+					href={node.href}
+					class:list={["node", node.type, node.status]}
+					data-id={node.id}
+					data-title={node.title}
+					data-desc={node.description}
+					data-meta={node.meta}
+					aria-label={node.title}
+					style={style}
+				>
+					{node.type === "page" ? (
+						<rect x="-6" y="-6" width="12" height="12" rx="2" />
+					) : (
+						<circle r={node.type === "tag" ? 8 : node.type === "essay" ? 6.5 : 5} />
+					)}
+					<text x={left ? -14 : 14} dy="0.35em" text-anchor={left ? "end" : "start"}>
+						{node.label}
+					</text>
+				</a>
+			);
+		})}
+	</g>
+</svg>

@@ -16,3 +16,6 @@ export async function getWriting() {
 }
 
 export type WritingItem = Awaited<ReturnType<typeof getWriting>>[number];
+
+// Shared view-transition name, so a post's title morphs from the list into the post page.
+export const transitionName = (href: string) => `t${href.replace(/[^a-z0-9]/gi, "-")}`;

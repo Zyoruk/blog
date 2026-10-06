@@ -1,5 +1,5 @@
 ---
-import type { WritingItem } from "../writing";
+import { type WritingItem, transitionName } from "../writing";
 import FormattedDate from "./FormattedDate.astro";
 
 interface Props {
@@ -14,7 +14,9 @@ const { items } = Astro.props;
 		<li data-tags={[item.kind, ...(item.tags ?? [])].join(" ")}>
 			<FormattedDate date={item.pubDate} />
 			<div>
-				<a href={item.href}>{item.title}</a>
+				<a href={item.href} data-scramble style={`view-transition-name: ${transitionName(item.href)}`}>
+					{item.title}
+				</a>
 				<span class="mono">
 					{item.kind}{item.status && ` · ${item.status}`}
 				</span>

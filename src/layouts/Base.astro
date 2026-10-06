@@ -18,9 +18,13 @@ const { title, description } = Astro.props;
 	</head>
 	<body>
 		<Header />
+		<slot name="hero" />
 		<main>
 			<slot />
 		</main>
 		<Footer />
+		<script>
+			import "../scripts/motion";
+		</script>
 	</body>
 </html>

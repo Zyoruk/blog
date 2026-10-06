@@ -1,6 +1,6 @@
 ---
 import FormattedDate from "../components/FormattedDate.astro";
-import type { Kind } from "../writing";
+import { type Kind, transitionName } from "../writing";
 import Base from "./Base.astro";
 
 // Used by essays and notes (props spread from the collection entry) and by
@@ -24,7 +24,7 @@ const updatedDate = data.updatedDate && new Date(data.updatedDate);
 <Base title={`${title} | Zyoruk`} description={description}>
 	<article>
 		<header>
-			<h1>{title}</h1>
+			<h1 style={kind && `view-transition-name: ${transitionName(Astro.url.pathname)}`}>{title}</h1>
 			<p class="mono meta">
 				{kind && <span class="kind">{kind}</span>}
 				{pubDate && <FormattedDate date={pubDate} />}

@@ -37,6 +37,9 @@ const filters = ["all", "essay", "note", ...new Set(items.flatMap((item) => item
 			}
 		});
 	}
+	// Tag nodes in the home page graph link here as /blog?tag=<tag>.
+	const tag = new URLSearchParams(location.search).get("tag");
+	[...buttons].find((button) => button.dataset.filter === tag)?.click();
 </script>
 
 <style>

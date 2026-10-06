@@ -1,11 +1,12 @@
 ---
 import { Image } from "astro:assets";
 import avatar from "../assets/zyoruk.png";
+import GardenHero from "../components/GardenHero.astro";
 import PostList from "../components/PostList.astro";
 import Base from "../layouts/Base.astro";
 import { getWriting } from "../writing";
 
-const latest = (await getWriting()).slice(0, 5);
+const writing = await getWriting();
 
 const focus = [
 	{
@@ -36,8 +37,10 @@ const focus = [
 	title="Zyoruk | Software Engineer"
 	description="Zyoruk is a software engineer writing about AI, cloud, architecture and engineering teams."
 >
-	<section class="intro">
-		<Image src={avatar} alt="Zyoruk" width={96} height={96} class="avatar" loading="eager" />
+	<GardenHero slot="hero" items={writing} />
+
+	<section class="intro" id="about" data-reveal>
+		<Image src={avatar} alt="Zyoruk" width={96} height={96} class="avatar" />
 		<div>
 			<h1>Zyoruk</h1>
 			<p class="lead">
@@ -50,19 +53,21 @@ const focus = [
 		</div>
 	</section>
 
-	<h2 class="kicker">focus</h2>
+	<h2 class="kicker" data-scramble data-reveal>focus</h2>
 	<dl class="focus">
 		{focus.map(({ area, detail }) => (
-			<div>
+			<div data-reveal>
 				<dt>{area}</dt>
 				<dd>{detail}</dd>
 			</div>
 		))}
 	</dl>
 
-	<h2 class="kicker">latest</h2>
-	<PostList items={latest} />
-	<p class="more mono"><a href="/blog">all writing →</a></p>
+	<h2 class="kicker" data-scramble data-reveal>latest</h2>
+	<div data-reveal>
+		<PostList items={writing.slice(0, 5)} />
+		<p class="more mono"><a href="/blog">all writing →</a></p>
+	</div>
 </Base>
 
 <style>
