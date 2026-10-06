@@ -1,0 +1,69 @@
+---
+import type { WritingItem } from "../writing";
+import FormattedDate from "./FormattedDate.astro";
+
+interface Props {
+	items: WritingItem[];
+}
+
+const { items } = Astro.props;
+---
+
+<ul class="post-list">
+	{items.map((item) => (
+		<li data-tags={[item.kind, ...(item.tags ?? [])].join(" ")}>
+			<FormattedDate date={item.pubDate} />
+			<div>
+				<a href={item.href}>{item.title}</a>
+				<span class="mono">
+					{item.kind}{item.status && ` · ${item.status}`}
+				</span>
+			</div>
+		</li>
+	))}
+</ul>
+
+<style>
+	ul {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+
+	li {
+		display: grid;
+		grid-template-columns: 6.5rem 1fr;
+		gap: 1rem;
+		padding: 0.75rem 0;
+		border-bottom: 1px solid var(--border);
+	}
+
+	li[hidden] {
+		display: none;
+	}
+
+	time {
+		font-family: var(--mono);
+		font-size: 0.8125rem;
+		color: var(--muted);
+		padding-top: 0.2rem;
+	}
+
+	a {
+		color: var(--ink);
+		font-weight: 500;
+		text-decoration: none;
+		margin-right: 0.5rem;
+	}
+
+	a:hover {
+		color: var(--accent);
+	}
+
+	@media (max-width: 480px) {
+		li {
+			grid-template-columns: 1fr;
+			gap: 0.15rem;
+		}
+	}
+</style>

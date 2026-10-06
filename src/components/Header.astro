@@ -3,235 +3,132 @@ import HeaderLink from "./HeaderLink.astro";
 ---
 
 <header>
-	<nav class="container">
-		<div class="nav-brand">
-			<a href="/" class="brand-link">
-				<div class="brand-avatar">
-					<img src="/avatar.svg" alt="Zyoruk Logo" width="40" height="40" />
-				</div>
-				<div class="brand-text">
-					<h2 class="brand-name">Zyoruk</h2>
-					<span class="brand-tagline">Software Engineer & Tech Leader</span>
-				</div>
-			</a>
-		</div>
-		<div class="nav-links">
-			<HeaderLink href="/">Home</HeaderLink>
-			<HeaderLink href="/blog">Blog</HeaderLink>
+	<nav>
+		<a href="/" class="brand">
+			<img src="/avatar.svg" alt="" width="28" height="28" />
+			<span>~/zyoruk</span>
+		</a>
+		<div class="links">
+			<HeaderLink href="/blog">writing</HeaderLink>
+			<HeaderLink href="/now">now</HeaderLink>
+			<HeaderLink href="/uses">uses</HeaderLink>
+			<a href="/rss.xml" class="rss">rss</a>
+			<button type="button" id="theme-toggle" aria-label="Toggle dark mode">
+				<span class="light-only" aria-hidden="true">☾</span>
+				<span class="dark-only" aria-hidden="true">☀</span>
+			</button>
 		</div>
 	</nav>
 </header>
+
+<script>
+	const root = document.documentElement;
+	document.getElementById("theme-toggle")?.addEventListener("click", () => {
+		const isDark =
+			root.dataset.theme === "dark" ||
+			(!root.dataset.theme && matchMedia("(prefers-color-scheme: dark)").matches);
+		const next = isDark ? "light" : "dark";
+		root.dataset.theme = next;
+		try {
+			localStorage.setItem("theme", next);
+		} catch {}
+	});
+</script>
 
 <style>
 	header {
 		position: sticky;
 		top: 0;
-		z-index: 100;
-		background: rgba(255, 252, 248, 0.90);
-		backdrop-filter: blur(20px);
-		-webkit-backdrop-filter: blur(20px);
-		border-bottom: 1px solid var(--md-sys-color-outline-variant);
-		transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+		z-index: 10;
+		background: color-mix(in srgb, var(--bg) 85%, transparent);
+		backdrop-filter: blur(12px);
+		-webkit-backdrop-filter: blur(12px);
+		border-bottom: 1px solid var(--border);
 	}
 
 	nav {
+		max-width: var(--measure);
+		margin: 0 auto;
+		padding: 0 1rem;
+		height: 3.5rem;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		height: 72px;
-		position: relative;
+		gap: 1rem;
+		font-family: var(--mono);
+		font-size: 0.875rem;
 	}
 
-	/* Brand Section */
-	.nav-brand {
-		flex: 1;
-	}
-
-	.brand-link {
+	.brand {
 		display: flex;
 		align-items: center;
-		gap: var(--space-md);
+		gap: 0.6rem;
+		color: var(--ink);
+		font-weight: 500;
 		text-decoration: none;
-		color: inherit;
-		transition: all 0.3s ease;
-		padding: var(--space-xs) 0;
-		border-radius: var(--md-sys-shape-corner-medium);
 	}
 
-	.brand-link:hover {
-		transform: translateX(2px);
+	.brand img {
+		border-radius: 6px;
 	}
 
-	.brand-link:hover::after {
+	.links {
+		display: flex;
+		align-items: center;
+		gap: 1.1rem;
+	}
+
+	.rss {
+		color: var(--muted);
+		text-decoration: none;
+	}
+
+	.rss:hover {
+		color: var(--ink);
+	}
+
+	button {
+		background: none;
+		border: 1px solid var(--border);
+		border-radius: var(--radius);
+		color: var(--muted);
+		width: 2rem;
+		height: 2rem;
+		font-size: 1rem;
+		line-height: 1;
+		cursor: pointer;
+	}
+
+	button:hover {
+		color: var(--ink);
+		border-color: var(--muted);
+	}
+
+	.dark-only {
 		display: none;
 	}
 
-	.brand-avatar {
-		width: 44px;
-		height: 44px;
-		border-radius: 50%;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		box-shadow: 
-			0 4px 12px rgba(0, 0, 0, 0.1),
-			0 2px 6px rgba(0, 0, 0, 0.05);
-		transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-		position: relative;
-		overflow: hidden;
-	}
-	.brand-link:hover .brand-avatar {
-		transform: scale(1.05);
-		box-shadow: 
-			0 6px 20px rgba(0, 0, 0, 0.15),
-			0 3px 10px rgba(0, 0, 0, 0.08);
-	}
-
-	.brand-text {
-		display: flex;
-		flex-direction: column;
-		gap: 0.125rem;
-	}
-
-	.brand-name {
-		margin: 0;
-		font-size: 1.5rem;
-		font-weight: 500;
-		color: var(--md-sys-color-on-surface);
-		letter-spacing: -0.025em;
-		line-height: 1.1;
-		transition: color 0.3s ease;
-	}
-
-	.brand-link:hover .brand-name {
-		color: var(--md-sys-color-primary);
-	}
-
-	.brand-tagline {
-		font-size: 0.8rem;
-		color: var(--md-sys-color-on-surface-variant);
-		font-weight: 400;
-		letter-spacing: 0.02em;
-		line-height: 1.2;
-		opacity: 0.9;
-		transition: all 0.3s ease;
-	}
-
-	.brand-link:hover .brand-tagline {
-		opacity: 1;
-		color: var(--md-sys-color-primary);
-	}
-
-	/* Navigation Links */
-	.nav-links {
-		display: flex;
-		align-items: center;
-		gap: var(--space-sm);
-	}
-
-	.btn {
-		display: inline-flex;
-		align-items: center;
-		gap: var(--space-xs);
-		padding: var(--space-sm) var(--space-lg);
-		text-decoration: none;
-		font-size: 0.875rem;
-		font-weight: 500;
-		border-radius: var(--md-sys-shape-corner-extra-large);
-		transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-		letter-spacing: 0.025em;
-		position: relative;
-		overflow: hidden;
-	}
-
-	.btn::before {
-		content: '';
-		position: absolute;
-		top: 0;
-		left: -100%;
-		width: 100%;
-		height: 100%;
-		background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-		transition: left 0.5s;
-	}
-
-	.btn:hover::before {
-		left: 100%;
-	}
-
-	.btn-outline {
-		color: var(--md-sys-color-primary);
-		border: 1.5px solid var(--md-sys-color-primary);
-		background: transparent;
-	}
-
-	.btn-outline:hover {
-		background: var(--md-sys-color-primary);
-		color: var(--md-sys-color-on-primary);
-		transform: translateY(-1px);
-		box-shadow: 
-			0 4px 12px rgba(var(--md-sys-color-primary-rgb), 0.3),
-			0 2px 6px rgba(var(--md-sys-color-primary-rgb), 0.2);
-	}
-
-	/* Scroll effect */
-	header.scrolled {
-		background: rgba(255, 252, 248, 0.95);
-		backdrop-filter: blur(24px);
-		-webkit-backdrop-filter: blur(24px);
-		box-shadow: 
-			0 4px 20px rgba(0, 0, 0, 0.08),
-			0 2px 8px rgba(0, 0, 0, 0.04);
-		border-bottom-color: var(--md-sys-color-outline);
-	}
-
-
-	/* Responsive Design */
-	@media (max-width: 768px) {
-		nav {
-			height: 64px;
+	@media (prefers-color-scheme: dark) {
+		:global(:root:not([data-theme="light"])) .light-only {
+			display: none;
 		}
-
-		.brand-avatar {
-			width: 36px;
-			height: 36px;
+		:global(:root:not([data-theme="light"])) .dark-only {
+			display: inline;
 		}
+	}
 
+	:global(:root[data-theme="dark"]) .light-only {
+		display: none;
+	}
 
-		.brand-name {
-			font-size: 1.25rem;
-		}
-
-		.brand-tagline {
-			font-size: 0.7rem;
-		}
-
-		.nav-links {
-			gap: var(--space-xs);
-		}
-
-		.btn {
-			padding: var(--space-xs) var(--space-md);
-			font-size: 0.8rem;
-		}
+	:global(:root[data-theme="dark"]) .dark-only {
+		display: inline;
 	}
 
 	@media (max-width: 480px) {
-		.brand-text {
-			gap: 0;
-		}
-
-		.brand-tagline {
+		.brand span,
+		.rss {
 			display: none;
-		}
-
-		.nav-links {
-			gap: var(--space-xs);
-		}
-
-		.btn {
-			padding: var(--space-xs) var(--space-sm);
 		}
 	}
 </style>

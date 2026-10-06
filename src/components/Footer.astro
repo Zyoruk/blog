@@ -1,90 +1,40 @@
 ---
-
 const today = new Date();
 ---
 
 <footer>
-	<div class="container">
-		<div class="footer-content">
-			<div class="copyright">
-				&copy; {today.getFullYear()} Zyoruk
-			</div>
-			<div class="footer-links">
-				<span>Built with Astro</span>
-				<span class="divider">•</span>
-				<span>Thoughts and code from San José, Costa Rica</span>
-			</div>
-		</div>
+	<div>
+		<span>© {today.getFullYear()} Zyoruk · San José, Costa Rica</span>
+		<span>
+			<a href="https://github.com/Zyoruk">github</a> ·
+			<a href="/rss.xml">rss</a>
+		</span>
 	</div>
 </footer>
 
 <style>
 	footer {
-		background: linear-gradient(135deg, var(--md-sys-color-surface-container) 0%, var(--md-sys-color-surface-variant) 100%);
-		color: var(--md-sys-color-on-surface-variant);
-		margin-top: var(--space-2xl);
-		border-top: 1px solid var(--md-sys-color-outline-variant);
-		position: relative;
-		overflow: hidden;
+		border-top: 1px solid var(--border);
+		font-family: var(--mono);
+		font-size: 0.8125rem;
+		color: var(--muted);
 	}
 
-	footer::before {
-		content: '';
-		position: absolute;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		background: radial-gradient(circle at 20% 50%, rgba(139, 154, 140, 0.05) 0%, transparent 50%),
-					radial-gradient(circle at 80% 20%, rgba(168, 181, 160, 0.05) 0%, transparent 50%);
-		pointer-events: none;
-	}
-
-	.footer-content {
-		position: relative;
-		z-index: 1;
-		padding: var(--space-xl) 0;
-		text-align: center;
+	div {
+		max-width: var(--measure);
+		margin: 0 auto;
+		padding: 1.5rem 1rem;
 		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: var(--space-sm);
+		flex-wrap: wrap;
+		justify-content: space-between;
+		gap: 0.5rem;
 	}
 
-	.copyright {
-		font-size: 0.875rem;
-		color: var(--md-sys-color-on-surface-variant);
-		font-weight: 400;
+	a {
+		color: var(--muted);
 	}
 
-	.footer-links {
-		display: flex;
-		align-items: center;
-		gap: var(--space-sm);
-		font-size: 0.875rem;
-		color: var(--md-sys-color-on-surface-variant);
-	}
-
-	.divider {
-		opacity: 0.5;
-	}
-
-	@media (min-width: 768px) {
-		.footer-content {
-			flex-direction: row;
-			justify-content: space-between;
-			align-items: center;
-		}
-	}
-
-	@media (max-width: 480px) {
-		.footer-links {
-			flex-direction: column;
-			gap: var(--space-xs);
-		}
-
-		.divider {
-			display: none;
-		}
+	a:hover {
+		color: var(--ink);
 	}
 </style>
