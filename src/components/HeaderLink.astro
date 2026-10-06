@@ -9,69 +9,26 @@ const subpath = pathname.match(/[^\/]+/g);
 const isActive = href === pathname || href === `/${subpath?.[0] || ""}`;
 ---
 
-<a href={href} class:list={[className, { active: isActive }]} {...props}>
+<a href={href} data-scramble class:list={[className, { active: isActive }]} aria-current={isActive ? "page" : undefined} {...props}>
 	<slot />
 </a>
 
 <style>
 	a {
-		display: inline-flex;
-		align-items: center;
+		color: var(--muted);
 		text-decoration: none;
-		color: var(--md-sys-color-on-surface-variant);
-		padding: var(--space-xs) var(--space-md);
-		transition: all 0.3s ease;
-		font-weight: 400;
-		font-size: 0.9rem;
-		letter-spacing: 0.025em;
-		position: relative;
-	}
-
-	a::after {
-		content: '';
-		position: absolute;
-		bottom: -2px;
-		left: 50%;
-		transform: translateX(-50%);
-		width: 0;
-		height: 2px;
-		background: var(--md-sys-color-primary);
-		border-radius: 1px;
-		transition: width 0.3s ease;
 	}
 
 	a:hover {
-		color: var(--md-sys-color-on-surface);
-		background-color: var(--md-sys-color-surface-container);
-		border-color: var(--md-sys-color-outline-variant);
-		transform: translateY(-1px);
-	}
-
-	a:hover::after {
-		width: 24px;
+		color: var(--ink);
 	}
 
 	a.active {
-		background-color: var(--md-sys-color-primary-container);
-		color: var(--md-sys-color-on-primary-container);
-		border-color: var(--md-sys-color-primary);
-		font-weight: 500;
+		color: var(--accent);
 	}
 
-	a.active::after {
-		width: 100%;
-		background: var(--md-sys-color-primary);
-	}
-
-	a.active:hover {
-		background-color: var(--md-sys-color-primary-container);
-		transform: translateY(-1px);
-	}
-
-	@media (max-width: 768px) {
-		a {
-			padding: var(--space-xs) var(--space-sm);
-			font-size: 0.85rem;
-		}
+	a.active::before {
+		content: "./";
+		opacity: 0.6;
 	}
 </style>
