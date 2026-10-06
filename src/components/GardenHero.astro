@@ -100,27 +100,34 @@ const bootLines = [
 		font-family: var(--mono);
 	}
 
-	.graph {
+	/*
+	  Everything inside the SVGs is rendered by GraphSvg, so it doesn't carry
+	  this component's scope attribute: every graph selector must be :global.
+	*/
+	.hero :global(.graph) {
 		position: absolute;
 		inset: 3rem 1rem;
 		width: calc(100% - 2rem);
 		height: calc(100% - 6rem);
 	}
 
-	.graph.tall {
+	.hero :global(.graph.tall) {
 		display: none;
 	}
 
 	@media (max-width: 700px) {
-		.graph.wide {
+		.hero :global(.graph.wide) {
 			display: none;
 		}
-		.graph.tall {
+		.hero :global(.graph.tall) {
 			display: block;
 		}
 	}
 
-	/* Graph marks. :global because they're rendered by GraphSvg. */
+	/* The visible dot is small; this invisible ring is the real click target. */
+	.hero :global(.hit) {
+		fill: transparent;
+	}
 	.hero :global(.edge) {
 		stroke: var(--h-line);
 		stroke-width: 1.2;
@@ -143,22 +150,22 @@ const bootLines = [
 		transition: fill 0.2s;
 	}
 
-	.hero :global(.essay circle) {
+	.hero :global(.essay .mark) {
 		fill: var(--h-cyan);
 	}
 
-	.hero :global(.note circle) {
+	.hero :global(.note .mark) {
 		fill: var(--h-lime);
 	}
 
-	.hero :global(.draft circle) {
+	.hero :global(.draft .mark) {
 		fill: var(--h-bg);
 		stroke: var(--h-lime);
 		stroke-width: 1.5;
 		stroke-dasharray: 2.5 2;
 	}
 
-	.hero :global(.tag circle) {
+	.hero :global(.tag .mark) {
 		fill: var(--h-bg);
 		stroke: var(--h-cyan);
 		stroke-width: 1.5;
@@ -168,7 +175,7 @@ const bootLines = [
 		fill: var(--h-cyan);
 	}
 
-	.hero :global(.page rect) {
+	.hero :global(.page .mark) {
 		fill: var(--h-bg);
 		stroke: var(--h-ink);
 		stroke-width: 1.5;
@@ -191,8 +198,7 @@ const bootLines = [
 		fill: var(--h-ink);
 	}
 
-	.hero :global(.node:focus-visible circle),
-	.hero :global(.node:focus-visible rect) {
+	.hero :global(.node:focus-visible .mark) {
 		stroke: #fff;
 		stroke-width: 2;
 	}

@@ -38,7 +38,14 @@ const LOGO_R = 30;
 			if (node.type === "center") {
 				// The logo itself: a terminal prompt. The lime bar is the cursor.
 				return (
-					<g class="node center" data-id={node.id} style={style} aria-hidden="true">
+					<g
+					class="node center"
+					data-id={node.id}
+					data-x={node.x}
+					data-y={node.y}
+					style={style}
+					aria-hidden="true"
+				>
 						<circle r={LOGO_R + 6} class="halo" />
 						<g transform={`scale(${LOGO_R / 1000}) translate(-1000 -1000)`}>
 							<circle cx="1000" cy="1000" r="1000" fill="#1e1e1e" />
@@ -61,16 +68,19 @@ const LOGO_R = 30;
 					data-desc={node.description}
 					data-meta={node.meta}
 					aria-label={node.title}
+					data-x={node.x}
+					data-y={node.y}
 					style={style}
 				>
 					{node.type === "page" ? (
-						<rect x="-6" y="-6" width="12" height="12" rx="2" />
+						<rect class="mark" x="-6" y="-6" width="12" height="12" rx="2" />
 					) : (
-						<circle r={node.type === "tag" ? 8 : node.type === "essay" ? 6.5 : 5} />
+						<circle class="mark" r={node.type === "tag" ? 8 : node.type === "essay" ? 6.5 : 5} />
 					)}
 					<text x={left ? -14 : 14} dy="0.35em" text-anchor={left ? "end" : "start"}>
 						{node.label}
 					</text>
+					<circle class="hit" r="20" />
 				</a>
 			);
 		})}

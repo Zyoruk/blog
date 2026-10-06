@@ -1,6 +1,6 @@
 // Brings the home page's garden graph to life. The graph is already laid out
-// in the HTML; this only adds the boot intro, idle float, cursor push, and the
-// hover highlight with a preview card.
+// in the HTML; this only adds the boot intro, idle float, a gentle pull toward
+// the cursor, and the hover highlight with a preview card.
 
 interface Node {
 	el: SVGGElement | SVGAElement;
@@ -12,28 +12,53 @@ interface Node {
 	phase: number;
 }
 
+type Edge = { el: SVGLineElement; a: Node; b: Node };
+type Hovered = { node: Node | null };
+
 const BOOT_MS = 1150; // matches the typing time of the boot lines in CSS
-const PUSH_RADIUS = 120;
-const PUSH_FORCE = 28;
+// Nodes near the cursor lean toward it (never away), so they're easy to catch.
+const PULL_RADIUS = 90;
+const PULL_MAX = 8;
 
 const translate = (x: number, y: number, s = 1) => `translate(${x}px, ${y}px) scale(${s})`;
 
 export function initGarden() {
 	const hero = document.querySelector<HTMLElement>("[data-hero]");
-	// ponytail: picks the wide or tall graph once at load. Resizing across the
-	// 700px breakpoint shows the other one static (links still work); re-init on
-	// a matchMedia change if that ever matters.
-	const svg = [...document.querySelectorAll<SVGSVGElement>(".hero .graph")].find(
-		(el) => getComputedStyle(el).display !== "none"
-	);
-	if (!hero || !svg) return;
+	if (!hero) return;
 
+	// The wide and tall graphs swap at a CSS breakpoint; bring whichever is visible to life.
+	const narrow = matchMedia("(max-width: 700px)");
+	let controller = new AbortController();
+	const mountVisible = (withIntro: boolean) => {
+		const svg = hero.querySelector<SVGSVGElement>(narrow.matches ? ".graph.tall" : ".graph.wide");
+		if (svg) mount(hero, svg, withIntro, controller.signal);
+	};
+	mountVisible(true);
+	narrow.addEventListener("change", () => {
+		controller.abort();
+		controller = new AbortController();
+		mountVisible(false);
+	});
+}
+
+function mount(hero: HTMLElement, svg: SVGSVGElement, withIntro: boolean, signal: AbortSignal) {
 	const nodes = new Map<string, Node>();
 	svg.querySelectorAll<SVGGElement>(".node").forEach((el, i) => {
-		const [, x, y] = el.style.transform.match(/translate\(([-\d.]+)px, ([-\d.]+)px\)/)!.map(Number);
+		const x = Number(el.dataset.x);
+		const y = Number(el.dataset.y);
+		// Re-mounting after a breakpoint swap: start from the layout, not wherever it drifted.
+		el.style.transform = translate(x, y);
 		nodes.set(el.dataset.id!, { el, id: el.dataset.id!, bx: x, by: y, x, y, phase: i * 1.7 });
 	});
-	const edges = [...svg.querySelectorAll<SVGLineElement>(".edge")].map((el) => ({
+	for (const edge of svg.querySelectorAll<SVGLineElement>(".edge")) {
+		const a = nodes.get(edge.dataset.a!)!;
+		const b = nodes.get(edge.dataset.b!)!;
+		edge.setAttribute("x1", `${a.x}`);
+		edge.setAttribute("y1", `${a.y}`);
+		edge.setAttribute("x2", `${b.x}`);
+		edge.setAttribute("y2", `${b.y}`);
+	}
+	const edges: Edge[] = [...svg.querySelectorAll<SVGLineElement>(".edge")].map((el) => ({
 		el,
 		a: nodes.get(el.dataset.a!)!,
 		b: nodes.get(el.dataset.b!)!,
@@ -41,19 +66,20 @@ export function initGarden() {
 	const center = nodes.get("center")!;
 	const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-	setupHover(hero, svg, edges);
+	const hovered: Hovered = { node: null };
+	setupHover(hero, svg, nodes, edges, hovered, signal);
 
 	const root = document.documentElement;
-	if (root.dataset.intro === "play") {
+	if (withIntro && root.dataset.intro === "play") {
 		playIntro(hero, svg, nodes, edges, center).then(() => {
 			delete root.dataset.intro;
 			try {
 				sessionStorage.setItem("booted", "1");
 			} catch {}
-			if (!reduceMotion) startFloat(hero, svg, nodes, edges);
+			if (!reduceMotion && !signal.aborted) startFloat(hero, svg, nodes, edges, hovered, signal);
 		});
 	} else if (!reduceMotion) {
-		startFloat(hero, svg, nodes, edges);
+		startFloat(hero, svg, nodes, edges, hovered, signal);
 	}
 }
 
@@ -61,7 +87,7 @@ function playIntro(
 	hero: HTMLElement,
 	svg: SVGSVGElement,
 	nodes: Map<string, Node>,
-	edges: { el: SVGLineElement; a: Node; b: Node }[],
+	edges: Edge[],
 	center: Node
 ) {
 	const animations: Animation[] = [];
@@ -143,42 +169,54 @@ function playIntro(
 	});
 }
 
-// Nodes drift gently and lean away from the cursor. Runs only while the hero is on screen.
+// Nodes drift gently and lean toward the cursor; the hovered one holds still so
+// it can be clicked. Runs only while the hero is on screen.
 function startFloat(
 	hero: HTMLElement,
 	svg: SVGSVGElement,
 	nodes: Map<string, Node>,
-	edges: { el: SVGLineElement; a: Node; b: Node }[]
+	edges: Edge[],
+	hovered: Hovered,
+	signal: AbortSignal
 ) {
 	let pointer: DOMPoint | null = null;
 	let frame = 0;
 
-	hero.addEventListener("pointermove", (event) => {
-		const rect = hero.getBoundingClientRect();
-		hero.style.setProperty("--gx", `${event.clientX - rect.left}px`);
-		hero.style.setProperty("--gy", `${event.clientY - rect.top}px`);
-		const matrix = svg.getScreenCTM();
-		pointer = matrix
-			? new DOMPoint(event.clientX, event.clientY).matrixTransform(matrix.inverse())
-			: null;
-	});
-	hero.addEventListener("pointerleave", () => {
-		pointer = null;
-	});
+	hero.addEventListener(
+		"pointermove",
+		(event) => {
+			const rect = hero.getBoundingClientRect();
+			hero.style.setProperty("--gx", `${event.clientX - rect.left}px`);
+			hero.style.setProperty("--gy", `${event.clientY - rect.top}px`);
+			const matrix = svg.getScreenCTM();
+			pointer = matrix
+				? new DOMPoint(event.clientX, event.clientY).matrixTransform(matrix.inverse())
+				: null;
+		},
+		{ signal }
+	);
+	hero.addEventListener(
+		"pointerleave",
+		() => {
+			pointer = null;
+		},
+		{ signal }
+	);
 
 	const tick = (t: number) => {
 		for (const node of nodes.values()) {
-			if (node.id === "center") continue;
+			if (node.id === "center" || node === hovered.node) continue;
 			let tx = node.bx + Math.sin(t / 1600 + node.phase) * 3;
 			let ty = node.by + Math.cos(t / 1900 + node.phase) * 3;
 			if (pointer) {
-				const dx = node.bx - pointer.x;
-				const dy = node.by - pointer.y;
+				const dx = pointer.x - node.bx;
+				const dy = pointer.y - node.by;
 				const d = Math.hypot(dx, dy);
-				if (d > 0 && d < PUSH_RADIUS) {
-					const push = ((PUSH_RADIUS - d) / PUSH_RADIUS) * PUSH_FORCE;
-					tx += (dx / d) * push;
-					ty += (dy / d) * push;
+				if (d > 0 && d < PULL_RADIUS) {
+					// Strongest close in, fading to zero at the edge; never past the cursor.
+					const pull = Math.min(d, ((PULL_RADIUS - d) / PULL_RADIUS) * PULL_MAX);
+					tx += (dx / d) * pull;
+					ty += (dy / d) * pull;
 				}
 			}
 			node.x += (tx - node.x) * 0.1;
@@ -194,22 +232,31 @@ function startFloat(
 		frame = requestAnimationFrame(tick);
 	};
 
-	new IntersectionObserver(([entry]) => {
+	const observer = new IntersectionObserver(([entry]) => {
 		cancelAnimationFrame(frame);
 		if (entry.isIntersecting) frame = requestAnimationFrame(tick);
-	}).observe(hero);
+	});
+	observer.observe(hero);
+	signal.addEventListener("abort", () => {
+		observer.disconnect();
+		cancelAnimationFrame(frame);
+	});
 }
 
-// Hover or focus a node: light up its neighbours and show a preview card.
+// Hover or focus a node: hold it still, light up its neighbours, show a preview card.
 function setupHover(
 	hero: HTMLElement,
 	svg: SVGSVGElement,
-	edges: { el: SVGLineElement; a: Node; b: Node }[]
+	nodes: Map<string, Node>,
+	edges: Edge[],
+	hovered: Hovered,
+	signal: AbortSignal
 ) {
 	const card = hero.querySelector<HTMLElement>(".card")!;
 	const [meta, title, desc] = card.querySelectorAll("p");
 
 	const show = (el: SVGAElement) => {
+		hovered.node = nodes.get(el.dataset.id!) ?? null;
 		svg.classList.add("focus");
 		el.classList.add("lit");
 		for (const edge of edges) {
@@ -225,7 +272,7 @@ function setupHover(
 		card.hidden = false;
 
 		const heroRect = hero.getBoundingClientRect();
-		const nodeRect = el.querySelector("circle, rect")!.getBoundingClientRect();
+		const nodeRect = el.querySelector(".mark")!.getBoundingClientRect();
 		const cardRect = card.getBoundingClientRect();
 		let left = nodeRect.right - heroRect.left + 16;
 		if (left + cardRect.width > heroRect.width - 16)
@@ -236,15 +283,17 @@ function setupHover(
 	};
 
 	const hide = () => {
+		hovered.node = null;
 		svg.classList.remove("focus");
 		for (const lit of svg.querySelectorAll(".lit")) lit.classList.remove("lit");
 		card.hidden = true;
 	};
+	signal.addEventListener("abort", hide);
 
 	for (const el of svg.querySelectorAll<SVGAElement>("a.node")) {
-		el.addEventListener("pointerenter", () => show(el));
-		el.addEventListener("pointerleave", hide);
-		el.addEventListener("focus", () => show(el));
-		el.addEventListener("blur", hide);
+		el.addEventListener("pointerenter", () => show(el), { signal });
+		el.addEventListener("pointerleave", hide, { signal });
+		el.addEventListener("focus", () => show(el), { signal });
+		el.addEventListener("blur", hide, { signal });
 	}
 }
