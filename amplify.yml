@@ -1,0 +1,19 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        # --frozen-lockfile so a build fails on lockfile drift instead of
+        # silently resolving different versions than local. (Yarn Classic flag;
+        # yarn.lock is v1.)
+        - yarn install --frozen-lockfile
+    build:
+      commands:
+        - yarn run build
+  artifacts:
+    baseDirectory: dist
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - node_modules/**/*

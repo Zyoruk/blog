@@ -23,5 +23,5 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 
-# Local Netlify folder
-.netlify
+# yarn install state (this repo uses Yarn Classic; nothing under .yarn/ is tracked)
+.yarn/
