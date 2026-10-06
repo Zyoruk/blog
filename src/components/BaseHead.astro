@@ -21,7 +21,7 @@ const { title, description, image = FallbackImage } = Astro.props;
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-<!-- Security headers are now configured at server level in astro.config.mjs -->
+<!-- Security headers: customHttp.yml in production, astro.config.mjs for `astro dev`. -->
 
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="sitemap" href="/sitemap-index.xml" />
