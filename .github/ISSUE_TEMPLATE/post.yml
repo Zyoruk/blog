@@ -7,7 +7,8 @@ body:
     attributes:
       value: |
         When you're ready to write: branch `post/<slug>` off `main`, copy
-        `.github/post-template.md` to `src/content/blog/<slug>.md`, and open a
+        `.github/post-template.md` to `src/content/blog/<slug>.md` (essay) or
+        `src/content/notes/<slug>.md` (note), and open a
         draft PR that says `Closes #<this issue>`. The Amplify preview URL on
         the PR is the review copy; merging to `main` publishes.
   - type: textarea

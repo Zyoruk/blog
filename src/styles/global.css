@@ -1,487 +1,242 @@
 /*
-  The CSS in this style tag is based off of Bear Blog's default CSS.
-  https://github.com/HermanMartinus/bearblog/blob/297026a877bc2ab2b3bdfbd6b9f7961c350917dd/templates/styles/blog/default.css
-  License MIT: https://github.com/HermanMartinus/bearblog/blob/master/LICENSE.md
- */
-
-/*
-  Inspired by Moon Journal - A spiritual blog theme with Material Design 3
-  Colors inspired by moonlight, nature, and spiritual wellness
+  Paper & Terminal — light, cool paper for reading; monospace and one sharp
+  accent for the technical feel. Every text color clears WCAG AA on --bg.
 */
 
-/* Material Design 3 Global Styles - Moon Journal Theme */
-
 :root {
-	/* Moon Journal Inspired Color Palette */
-	--md-sys-color-primary: #8b9a8c;
-	--md-sys-color-on-primary: #ffffff;
-	--md-sys-color-primary-container: #e8f0e9;
-	--md-sys-color-on-primary-container: #2a4a2f;
+	color-scheme: light;
+	--bg: #fbfcfd;
+	--surface: #f1f4f8;
+	--border: #dfe4ea;
+	--ink: #0f172a;
+	--text: #1e293b;
+	--muted: #475569;
+	--accent: #4f46e5;
+	--accent-2: #0f766e;
+	--accent-bg: #eef2ff;
 
-	--md-sys-color-secondary: #a8855c;
-	--md-sys-color-on-secondary: #ffffff;
-	--md-sys-color-secondary-container: #f2e6d7;
-	--md-sys-color-on-secondary-container: #3d2a16;
-
-	--md-sys-color-tertiary: #9b7b8e;
-	--md-sys-color-on-tertiary: #ffffff;
-	--md-sys-color-tertiary-container: #f0e2ed;
-	--md-sys-color-on-tertiary-container: #3f2235;
-
-	--md-sys-color-error: #d32f2f;
-	--md-sys-color-on-error: #ffffff;
-	--md-sys-color-error-container: #fdeaea;
-	--md-sys-color-on-error-container: #410e0b;
-
-	--md-sys-color-outline: #b0a599;
-	--md-sys-color-background: #fffcf8;
-	--md-sys-color-on-background: #2c2b28;
-	--md-sys-color-surface: #fffcf8;
-	--md-sys-color-on-surface: #2c2b28;
-	--md-sys-color-surface-variant: #f5f2ed;
-	--md-sys-color-on-surface-variant: #4a4640;
-	--md-sys-color-surface-container: #f8f4f0;
-	--md-sys-color-surface-container-high: #f2eee9;
-	--md-sys-color-surface-container-highest: #ede9e4;
-
-	--md-sys-color-inverse-surface: #414037;
-	--md-sys-color-inverse-on-surface: #f7f3ee;
-	--md-sys-color-inverse-primary: #c5d4c6;
-	--md-sys-color-shadow: #000000;
-	--md-sys-color-surface-tint: #8b9a8c;
-	--md-sys-color-outline-variant: #d4c8bb;
-	--md-sys-color-scrim: #000000;
-
-	/* Spiritual accent colors */
-	--moon-color-sage: #a8b5a0;
-	--moon-color-lavender: #c8b9d9;
-	--moon-color-rose-quartz: #f4c2c2;
-	--moon-color-moonstone: #e8e3d3;
-	--moon-color-forest: #6b7a6e;
-	--moon-color-earth: #a67c5a;
-
-	/* Material Design 3 Elevation */
-	--md-sys-elevation-level0: none;
-	--md-sys-elevation-level1: 0 1px 3px 0 rgba(0, 0, 0, 0.12), 0 1px 2px 0 rgba(0, 0, 0, 0.24);
-	--md-sys-elevation-level2: 0 3px 6px 0 rgba(0, 0, 0, 0.16), 0 2px 4px 0 rgba(0, 0, 0, 0.23);
-	--md-sys-elevation-level3: 0 6px 12px 0 rgba(0, 0, 0, 0.15), 0 4px 6px 0 rgba(0, 0, 0, 0.18);
-	--md-sys-elevation-level4: 0 8px 16px 0 rgba(0, 0, 0, 0.15), 0 6px 8px 0 rgba(0, 0, 0, 0.18);
-	--md-sys-elevation-level5: 0 12px 24px 0 rgba(0, 0, 0, 0.15), 0 8px 12px 0 rgba(0, 0, 0, 0.18);
-
-	/* Material Design 3 Shape */
-	--md-sys-shape-corner-extra-small: 4px;
-	--md-sys-shape-corner-small: 8px;
-	--md-sys-shape-corner-medium: 12px;
-	--md-sys-shape-corner-large: 16px;
-	--md-sys-shape-corner-extra-large: 28px;
-	--md-sys-shape-corner-full: 50%;
-
-	/* Custom spacing for spiritual design */
-	--space-xs: 0.5rem;
-	--space-sm: 1rem;
-	--space-md: 1.5rem;
-	--space-lg: 2rem;
-	--space-xl: 3rem;
-	--space-2xl: 4rem;
+	--sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+	--mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+	--measure: 42rem;
+	--radius: 6px;
 }
 
-/* Base Styles */
-* {
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme="light"]) {
+		color-scheme: dark;
+		--bg: #0b0f17;
+		--surface: #121826;
+		--border: #1f2937;
+		--ink: #f1f5f9;
+		--text: #cbd5e1;
+		--muted: #94a3b8;
+		--accent: #818cf8;
+		--accent-2: #2dd4bf;
+		--accent-bg: #1e1b4b;
+	}
+}
+
+:root[data-theme="dark"] {
+	color-scheme: dark;
+	--bg: #0b0f17;
+	--surface: #121826;
+	--border: #1f2937;
+	--ink: #f1f5f9;
+	--text: #cbd5e1;
+	--muted: #94a3b8;
+	--accent: #818cf8;
+	--accent-2: #2dd4bf;
+	--accent-bg: #1e1b4b;
+}
+
+*,
+*::before,
+*::after {
 	box-sizing: border-box;
 }
 
 body {
-	font-family: "Inter", "Roboto", -apple-system, BlinkMacSystemFont, sans-serif;
 	margin: 0;
-	padding: 0;
-	background-color: var(--md-sys-color-background);
-	color: var(--md-sys-color-on-background);
-	font-size: 16px;
-	line-height: 1.6;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	background: var(--bg);
+	color: var(--text);
+	font: 400 1.0625rem / 1.7 var(--sans);
 	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	font-weight: 400;
 }
 
-/* Typography - Moon Journal inspired */
+main {
+	flex: 1;
+	width: 100%;
+	max-width: var(--measure);
+	margin: 0 auto;
+	padding: 3rem 1rem 4rem;
+}
+
 h1,
 h2,
 h3,
-h4,
-h5,
-h6 {
-	margin: 0 0 var(--space-md) 0;
-	color: var(--md-sys-color-on-background);
-	line-height: 1.3;
-	font-weight: 500;
-	letter-spacing: -0.01em;
+h4 {
+	color: var(--ink);
+	font-weight: 600;
+	line-height: 1.25;
+	letter-spacing: -0.015em;
+	margin: 2.5rem 0 1rem;
 }
 
 h1 {
-	font-size: clamp(2.5rem, 5vw, 4rem);
-	font-weight: 300;
-	letter-spacing: -0.02em;
-	line-height: 1.1;
+	font-size: clamp(1.875rem, 4vw, 2.5rem);
+	margin-top: 0;
 }
-
 h2 {
-	font-size: clamp(2rem, 4vw, 3rem);
-	font-weight: 400;
-	letter-spacing: -0.015em;
+	font-size: 1.5rem;
 }
-
 h3 {
-	font-size: clamp(1.5rem, 3vw, 2.25rem);
-	font-weight: 500;
+	font-size: 1.2rem;
 }
 
-h4 {
-	font-size: clamp(1.25rem, 2.5vw, 1.75rem);
-	font-weight: 500;
+p,
+ul,
+ol,
+blockquote,
+pre {
+	margin: 0 0 1.25rem;
 }
 
-h5 {
-	font-size: clamp(1.125rem, 2vw, 1.5rem);
-	font-weight: 500;
-}
-
-h6 {
-	font-size: clamp(1rem, 1.5vw, 1.25rem);
-	font-weight: 500;
-	text-transform: uppercase;
-	letter-spacing: 0.1em;
-}
-
-p {
-	margin: 0 0 var(--space-md) 0;
-	font-size: 1rem;
-	line-height: 1.7;
-	letter-spacing: 0.01em;
-	color: var(--md-sys-color-on-surface);
-}
-
-.lead {
-	font-size: 1.25rem;
-	font-weight: 300;
-	line-height: 1.6;
-	color: var(--md-sys-color-on-surface-variant);
-}
-
-/* Links */
 a {
-	color: var(--md-sys-color-primary);
-	text-decoration: none;
-	transition: all 0.2s ease;
-	position: relative;
+	color: var(--accent);
+	text-decoration: underline;
+	text-decoration-thickness: 1px;
+	text-underline-offset: 3px;
 }
 
 a:hover {
-	color: var(--md-sys-color-primary);
+	text-decoration-thickness: 2px;
 }
 
-a:hover::after {
-	content: "";
-	position: absolute;
-	bottom: -2px;
-	left: 0;
-	right: 0;
-	height: 1px;
-	background: var(--md-sys-color-primary);
-	opacity: 0.6;
+:focus-visible {
+	outline: 2px solid var(--accent);
+	outline-offset: 2px;
+	border-radius: 2px;
 }
 
-/* Buttons - Material Design inspired */
-.btn {
-	display: inline-flex;
-	align-items: center;
-	gap: var(--space-xs);
-	padding: 12px 24px;
-	border: none;
-	border-radius: var(--md-sys-shape-corner-extra-large);
-	font-family: inherit;
-	font-size: 0.875rem;
-	font-weight: 500;
-	letter-spacing: 0.1em;
-	text-transform: uppercase;
-	cursor: pointer;
-	transition: all 0.2s ease;
-	text-decoration: none;
-	position: relative;
-	overflow: hidden;
+::selection {
+	background: var(--accent-bg);
+	color: var(--ink);
 }
 
-.btn-primary {
-	background: var(--md-sys-color-primary);
-	color: var(--md-sys-color-on-primary);
-	box-shadow: var(--md-sys-elevation-level1);
+strong {
+	color: var(--ink);
+	font-weight: 600;
 }
 
-.btn-primary:hover {
-	background: var(--moon-color-forest);
-	color: var(--md-sys-color-on-primary);
-	box-shadow: var(--md-sys-elevation-level2);
-	transform: translateY(-1px);
+hr {
+	border: 0;
+	border-top: 1px solid var(--border);
+	margin: 2.5rem 0;
 }
 
-.btn-primary:hover::after {
-	display: none;
-}
-
-.btn-secondary {
-	background: var(--md-sys-color-secondary-container);
-	color: var(--md-sys-color-on-secondary-container);
-	border: 1px solid var(--md-sys-color-outline-variant);
-}
-
-.btn-secondary:hover {
-	background: var(--md-sys-color-secondary);
-	color: var(--md-sys-color-on-secondary);
-	box-shadow: var(--md-sys-elevation-level1);
-	border-color: var(--md-sys-color-secondary);
-}
-
-.btn-secondary:hover::after {
-	display: none;
-}
-
-.btn-small {
-	padding: 0.5rem 1rem;
-	font-size: 0.875rem;
-	border-radius: var(--md-sys-shape-corner-small);
-}
-
-/* Code and Pre */
-code {
-	font-family: "JetBrains Mono", "Roboto Mono", monospace;
-	padding: 0.25em 0.5em;
-	background-color: var(--md-sys-color-surface-container-high);
-	border-radius: var(--md-sys-shape-corner-small);
-	font-size: 0.875em;
-	color: var(--md-sys-color-on-surface-variant);
-	border: 1px solid var(--md-sys-color-outline-variant);
-}
-
-pre {
-	padding: var(--space-md);
-	background-color: var(--md-sys-color-surface-container);
-	border-radius: var(--md-sys-shape-corner-medium);
-	overflow-x: auto;
-	border: 1px solid var(--md-sys-color-outline-variant);
-}
-
-pre > code {
-	padding: 0;
-	background: none;
-	border: none;
-	font-size: 0.875rem;
-	line-height: 1.5;
-}
-
-/* Blockquotes - Spiritual styling */
-blockquote {
-	margin: var(--space-lg) 0;
-	padding: var(--space-md) var(--space-lg);
-	border-left: 4px solid var(--moon-color-sage);
-	background: linear-gradient(
-		135deg,
-		var(--md-sys-color-surface-container) 0%,
-		var(--md-sys-color-surface-container-high) 100%
-	);
-	border-radius: var(--md-sys-shape-corner-medium);
-	font-style: italic;
-	color: var(--md-sys-color-on-surface-variant);
-	position: relative;
-}
-
-blockquote::before {
-	content: '"';
-	font-size: 4rem;
-	color: var(--moon-color-sage);
-	position: absolute;
-	top: -0.5rem;
-	left: var(--space-sm);
-	opacity: 0.3;
-	font-family: serif;
-}
-
-/* Images */
 img {
 	max-width: 100%;
 	height: auto;
-	border-radius: var(--md-sys-shape-corner-medium);
-	box-shadow: var(--md-sys-elevation-level1);
 }
 
-/* Cards - Moon Journal inspired */
-.card {
-	background: var(--md-sys-color-surface-container);
-	border-radius: var(--md-sys-shape-corner-large);
-	padding: var(--space-lg);
-	box-shadow: var(--md-sys-elevation-level1);
-	border: 1px solid var(--md-sys-color-outline-variant);
-	transition: all 0.3s ease;
+blockquote {
+	padding: 0.25rem 0 0.25rem 1.25rem;
+	border-left: 3px solid var(--accent);
+	color: var(--muted);
 }
 
-.card:hover {
-	box-shadow: var(--md-sys-elevation-level2);
-	transform: translateY(-2px);
-	border-color: var(--md-sys-color-outline);
+code,
+kbd,
+pre {
+	font-family: var(--mono);
+	font-size: 0.875em;
 }
 
-/* Tables */
+:not(pre) > code {
+	background: var(--surface);
+	border: 1px solid var(--border);
+	padding: 0.1em 0.35em;
+	border-radius: 4px;
+}
+
+pre {
+	background: var(--surface);
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+	padding: 1rem 1.25rem;
+	overflow-x: auto;
+	line-height: 1.55;
+}
+
 table {
 	width: 100%;
 	border-collapse: collapse;
-	margin: var(--space-lg) 0;
-	border-radius: var(--md-sys-shape-corner-medium);
-	overflow: hidden;
-	box-shadow: var(--md-sys-elevation-level1);
+	margin-bottom: 1.25rem;
 }
 
 th,
 td {
-	padding: var(--space-md);
-	border-bottom: 1px solid var(--md-sys-color-outline-variant);
 	text-align: left;
+	padding: 0.5rem 0.75rem;
+	border-bottom: 1px solid var(--border);
 }
 
-th {
-	background-color: var(--md-sys-color-surface-container-high);
-	color: var(--md-sys-color-on-surface-variant);
+/* Small mono labels: dates, tags, statuses, section kickers. */
+.mono {
+	font-family: var(--mono);
+	font-size: 0.8125rem;
+	color: var(--muted);
+}
+
+.kicker {
+	font-family: var(--mono);
+	font-size: 0.8125rem;
+	color: var(--accent-2);
+	margin: 3rem 0 1rem;
 	font-weight: 500;
-	font-size: 0.875rem;
-	text-transform: uppercase;
-	letter-spacing: 0.1em;
 }
 
-/* Form Elements */
-input,
-textarea,
-select {
-	font-family: inherit;
-	font-size: 1rem;
-	padding: var(--space-md);
-	border: 2px solid var(--md-sys-color-outline-variant);
-	border-radius: var(--md-sys-shape-corner-medium);
-	background-color: var(--md-sys-color-surface);
-	color: var(--md-sys-color-on-surface);
-	transition: all 0.2s ease;
+.kicker::before {
+	content: "## ";
+	opacity: 0.6;
 }
 
-input:focus,
-textarea:focus,
-select:focus {
-	outline: none;
-	border-color: var(--md-sys-color-primary);
-	box-shadow: 0 0 0 3px rgba(107, 115, 255, 0.1);
-}
-
-/* Horizontal Rule */
-hr {
-	border: none;
-	height: 1px;
-	background: linear-gradient(90deg, transparent, var(--md-sys-color-outline-variant), transparent);
-	margin: var(--space-xl) 0;
-}
-
-/* Utility Classes */
 .sr-only {
 	position: absolute;
 	width: 1px;
 	height: 1px;
-	padding: 0;
-	margin: -1px;
 	overflow: hidden;
-	clip: rect(0, 0, 0, 0);
+	clip: rect(0 0 0 0);
 	white-space: nowrap;
-	border: 0;
 }
 
-.container {
-	width: 100%;
-	max-width: 1200px;
-	margin: 0 auto;
-	padding: 0 var(--space-md);
+/* Scroll reveal: motion.ts adds .pending only to elements below the fold. */
+[data-reveal] {
+	transition: opacity 0.6s ease, transform 0.6s ease;
 }
 
-.container-narrow {
-	width: 100%;
-	max-width: 800px;
-	margin: 0 auto;
-	padding: 0 var(--space-md);
+[data-reveal].pending {
+	opacity: 0;
+	transform: translateY(16px);
 }
 
-.text-center {
-	text-align: center;
-}
-.text-left {
-	text-align: left;
-}
-.text-right {
-	text-align: right;
+/* Native cross-document page transitions. Browsers without support just navigate. */
+@view-transition {
+	/* biome-ignore lint/correctness/noUnknownProperty: valid in @view-transition, unknown to Biome 1.9 */
+	navigation: auto;
 }
 
-.mb-0 {
-	margin-bottom: 0;
-}
-.mb-sm {
-	margin-bottom: var(--space-sm);
-}
-.mb-md {
-	margin-bottom: var(--space-md);
-}
-.mb-lg {
-	margin-bottom: var(--space-lg);
-}
-.mb-xl {
-	margin-bottom: var(--space-xl);
+::view-transition-old(root),
+::view-transition-new(root) {
+	animation-duration: 0.25s;
 }
 
-.mt-0 {
-	margin-top: 0;
-}
-.mt-sm {
-	margin-top: var(--space-sm);
-}
-.mt-md {
-	margin-top: var(--space-md);
-}
-.mt-lg {
-	margin-top: var(--space-lg);
-}
-.mt-xl {
-	margin-top: var(--space-xl);
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-	:root {
-		--space-xs: 0.375rem;
-		--space-sm: 0.75rem;
-		--space-md: 1rem;
-		--space-lg: 1.5rem;
-		--space-xl: 2rem;
-		--space-2xl: 2.5rem;
+@media (prefers-reduced-motion: reduce) {
+	@view-transition {
+		/* biome-ignore lint/correctness/noUnknownProperty: valid in @view-transition, unknown to Biome 1.9 */
+		navigation: none;
 	}
-
-	body {
-		font-size: 14px;
-	}
-}
-
-/* Smooth scrolling */
-html {
-	scroll-behavior: smooth;
-}
-
-/* Selection styling */
-::selection {
-	background: var(--md-sys-color-primary-container);
-	color: var(--md-sys-color-on-primary-container);
-}
-
-/* Focus visible */
-:focus-visible {
-	outline: 2px solid var(--md-sys-color-primary);
-	outline-offset: 2px;
 }

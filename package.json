@@ -7,7 +7,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/zyoruk/blog-v2.git"
+    "url": "https://github.com/Zyoruk/blog.git"
   },
   "keywords": [
     "blog",
@@ -37,13 +37,17 @@
     "@astrojs/mdx": "^4.3.0",
     "@astrojs/rss": "^4.0.12",
     "@astrojs/sitemap": "^3.4.1",
-    "@material/web": "^2.3.0",
     "astro": "^5.9.2",
+    "d3-force": "^3.0.0",
     "sharp": "^0.34.2"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.3",
     "@biomejs/biome": "^1.9.4",
+    "@types/d3-force": "^3.0.10",
     "typescript": "^5.6.3"
+  },
+  "resolutions": {
+    "sharp": "^0.34.2"
   }
 }
