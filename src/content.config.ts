@@ -4,6 +4,9 @@ import { glob } from "astro/loaders";
 // Garden-lite: how settled the thinking is. Optional — leave it out and only dates show.
 const status = z.enum(["draft", "evolving", "stable"]).optional();
 
+// Hidden entries render in `astro dev` but are left out of production builds (and PR previews).
+const hidden = z.boolean().default(false);
+
 // Essays: long-form posts.
 const blog = defineCollection({
 	loader: glob({ base: "./src/content/blog", pattern: "**/*.{md,mdx}" }),
@@ -13,6 +16,7 @@ const blog = defineCollection({
 		pubDate: z.coerce.date(),
 		updatedDate: z.coerce.date().optional(),
 		status,
+		hidden,
 		tags: z.array(z.string()).optional(),
 	}),
 });
@@ -26,6 +30,7 @@ const notes = defineCollection({
 		pubDate: z.coerce.date(),
 		updatedDate: z.coerce.date().optional(),
 		status,
+		hidden,
 		tags: z.array(z.string()).optional(),
 	}),
 });

@@ -1,9 +1,10 @@
 ---
 import { type CollectionEntry, getCollection, render } from "astro:content";
 import BlogPost from "../../layouts/BlogPost.astro";
+import { visible } from "../../writing";
 
 export async function getStaticPaths() {
-	const notes = await getCollection("notes");
+	const notes = await getCollection("notes", visible);
 	return notes.map((note) => ({
 		params: { slug: note.id },
 		props: note,

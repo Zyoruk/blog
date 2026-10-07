@@ -1,0 +1,30 @@
+name: Post idea
+description: Capture an idea for a blog post.
+title: "Post: "
+labels: ["post"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        When you're ready to write: branch `post/<slug>` off `main`, copy
+        `.github/post-template.md` to `src/content/blog/<slug>.md` (essay) or
+        `src/content/notes/<slug>.md` (note), and open a
+        draft PR that says `Closes #<this issue>`. The Amplify preview URL on
+        the PR is the review copy; merging to `main` publishes.
+  - type: textarea
+    id: pitch
+    attributes:
+      label: Pitch
+      description: One or two sentences. Becomes the post's `description`.
+    validations:
+      required: true
+  - type: input
+    id: tags
+    attributes:
+      label: Tags
+      placeholder: career, engineering
+  - type: textarea
+    id: outline
+    attributes:
+      label: Outline / notes
+      description: Rough points, links, anything worth keeping.

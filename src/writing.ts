@@ -1,10 +1,17 @@
 import { getCollection } from "astro:content";
 
+// Filter for getCollection: drop `hidden: true` entries outside `astro dev`.
+export const visible = ({ data }: { data: { hidden: boolean } }) =>
+	import.meta.env.DEV || !data.hidden;
+
 export type Kind = "essay" | "note";
 
 // Essays and notes merged into one newest-first list, for the home page, /blog and RSS.
 export async function getWriting() {
-	const [essays, notes] = await Promise.all([getCollection("blog"), getCollection("notes")]);
+	const [essays, notes] = await Promise.all([
+		getCollection("blog", visible),
+		getCollection("notes", visible),
+	]);
 	return [
 		...essays.map((entry) => ({
 			...entry.data,

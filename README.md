@@ -17,7 +17,7 @@ Source of my blog: essays and notes on AI, cloud, architecture and engineering t
 yarn install
 yarn dev        # http://localhost:4321
 yarn build      # output in dist/
-yarn check      # Astro type and content checks
+yarn run check  # Astro type and content checks
 yarn lint       # Biome
 ```
 
