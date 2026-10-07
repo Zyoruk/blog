@@ -25,3 +25,7 @@ pnpm-debug.log*
 
 # yarn install state (this repo uses Yarn Classic; nothing under .yarn/ is tracked)
 .yarn/
+
+# Claude Code: skills are tracked, local state is not
+.claude/worktrees/
+.claude/settings.local.json
