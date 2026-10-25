@@ -37,6 +37,12 @@ const updatedDate = data.updatedDate && new Date(data.updatedDate);
 				{status && <span class={`status ${status}`}>{status}</span>}
 				{tags?.map((tag) => <span>#{tag}</span>)}
 			</p>
+			<p class="print-only">{new URL(Astro.url.pathname, Astro.site ?? Astro.url).href}</p>
+			{kind && (
+				<button type="button" class="save-pdf mono" data-print>
+					Save as PDF
+				</button>
+			)}
 			{(role || period) && (
 				<p class="mono meta case">
 					{role && <span>role: {role}</span>}
@@ -64,6 +70,12 @@ const updatedDate = data.updatedDate && new Date(data.updatedDate);
 				</ol>
 			</section>
 		)}
+
+		<script>
+			document.querySelectorAll<HTMLButtonElement>("[data-print]").forEach((button) => {
+				button.addEventListener("click", () => window.print());
+			});
+		</script>
 
 		{kind && (
 			<footer>
@@ -138,6 +150,30 @@ const updatedDate = data.updatedDate && new Date(data.updatedDate);
 
 	.prose :global(li) {
 		margin-bottom: 0.4rem;
+	}
+
+	.save-pdf {
+		margin-top: 1rem;
+		font-size: 0.8125rem;
+		background: none;
+		color: var(--muted);
+		border: 1px solid var(--border);
+		border-radius: 4px;
+		padding: 0.2rem 0.6rem;
+		cursor: pointer;
+	}
+
+	.save-pdf:hover {
+		color: var(--ink);
+		border-color: var(--muted);
+	}
+
+	.prose :global(.footnotes) {
+		margin-top: 3rem;
+		padding-top: 1rem;
+		border-top: 1px solid var(--border);
+		font-size: 0.875rem;
+		color: var(--muted);
 	}
 
 	footer {
