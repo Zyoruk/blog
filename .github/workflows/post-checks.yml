@@ -1,0 +1,41 @@
+name: Post checks
+
+# Runs on post PRs. Checks are deterministic: no model, no secrets.
+# Source verification fetches the cited URLs, so it needs outbound network only.
+on:
+  pull_request:
+    paths:
+      - 'src/content/**'
+      - 'scripts/**'
+      - 'package.json'
+
+permissions:
+  contents: read
+
+jobs:
+  prose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Changed posts
+        id: changed
+        run: |
+          git diff --name-only --diff-filter=ACMR "origin/${{ github.base_ref }}...HEAD" -- 'src/content/**' > changed.txt
+          echo "files=$(paste -sd' ' changed.txt)" >> "$GITHUB_OUTPUT"
+      - name: Linter tests
+        run: node --test scripts/lint-prose.test.mjs
+      - name: Prose lint
+        if: steps.changed.outputs.files != ''
+        run: node scripts/lint-prose.mjs ${{ steps.changed.outputs.files }}
+      - name: Post sources are reachable
+        if: steps.changed.outputs.files != ''
+        run: |
+          # Only posts with a sources: list are checked; others are skipped by the script.
+          for f in ${{ steps.changed.outputs.files }}; do
+            node scripts/verify-sources.mjs "$f"
+          done

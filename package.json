@@ -29,6 +29,8 @@
     "type-check": "tsc --noEmit",
     "check": "astro check",
     "check:pi": "node scripts/check-pi.mjs",
+    "lint:prose": "node scripts/lint-prose.mjs",
+    "verify:sources": "node scripts/verify-sources.mjs",
     "lint": "npx @biomejs/biome check src/",
     "format": "npx @biomejs/biome format src/ --write",
     "clean": "rm -rf dist .astro",
