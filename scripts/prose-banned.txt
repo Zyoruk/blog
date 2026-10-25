@@ -1,0 +1,18 @@
+# Phrases from CLAUDE.md ("Avoid in suggestions") and common AI-slop tells.
+# One per line. Matched case-insensitively as whole words or phrases.
+# Lines starting with # are comments. Edit this file, not the linter.
+
+delve
+leverage
+landscape
+tapestry
+game-changer
+game changer
+unlock the power
+dive into
+navigate the complexities
+in today's fast-paced world
+in today's
+it's important to note
+it is important to note
+in conclusion
