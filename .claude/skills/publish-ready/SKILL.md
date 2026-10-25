@@ -21,13 +21,21 @@ If `.private/denylist.txt` doesn't exist, tell the author the scan will only run
 1. Run `yarn check:pi .private/<slug>/<slug>.md`.
 2. Read the draft yourself for what a list can't catch: identifying details (a client's industry plus city plus year), internal numbers (costs, headcount, revenue, incident counts), quotes from colleagues or chats, screenshots, links to internal tools or private repos, and anything the author marked as private in the brainstorm.
 
-## 3. Walk the author through it
+## 3. Clear the drafting markers
+
+1. Stop if the draft has any `<!-- gap: ... -->` marker. Each one is a question the author has to answer, or a paragraph they have to cut. Don't publish with gaps open.
+2. Remove every `<!-- from: ... -->` comment. They're for the author's review, not for readers, and they name the private sources.
+3. Confirm the frontmatter has no leftover placeholder text from the template.
+
+## 4. Walk the author through it
 
 Show every finding as a short numbered list: the quote, why it might be private, and a suggested neutral rewrite ("a fintech client" instead of the name). One list, most sensitive first. Then ask the author to decide on each: keep (it's public or approved), rewrite, or cut. Apply only what they choose, in the local draft.
 
 Repeat the scan after the changes. When it's clean, or every remaining hit is one the author kept on purpose, ask plainly: "Is this public-ready?" Continue only on a clear yes.
 
-## 4. Take it public
+Also run `yarn verify:sources` on the post so the cited URLs are checked before the PR.
+
+## 5. Take it public
 
 Only the post goes out. Never copy the brainstorm, interview notes or any other `.private/` file into GitHub.
 

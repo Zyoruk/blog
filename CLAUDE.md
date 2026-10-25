@@ -7,11 +7,14 @@ Zyoruk's blog (https://blog.devpand.com): essays, notes, guides and case studies
 The author writes the posts. Claude helps on both sides of the writing:
 
 1. **Brainstorm** (`/brainstorm`): shape an idea, from a blank page or from a draft the author already has, into an angle and an outline. Stays local.
-2. The author writes, locally.
-3. **Public-ready** (`/publish-ready`): scan for private information, let the author decide, then open the issue, branch and draft PR.
-4. **Editorial review** (`/edit-review`): review the draft on its PR.
+2. **Interview** (`/interview`): ask the author about what they lived, one question at a time, and save their answers verbatim. Stays local.
+3. **Research** (`/research`): find published sources for the claims that aren't the author's experience, and verify every quote. Stays local.
+4. **Draft** (`/draft`): arrange the author's own sentences and verified sources under the outline, with gaps left as questions. Stays local.
+5. The author rewrites the draft until it is theirs.
+6. **Public-ready** (`/publish-ready`): scan for private information, let the author decide, strip the provenance markers, then open the issue, branch and draft PR.
+7. **Editorial review** (`/edit-review`): review the draft on its PR.
 
-Claude does not write post prose (new paragraphs, intros, conclusions) unless the author asks for it in that session. Outlines, suggested sentences inside a review, frontmatter and fixes to the author's own sentences are fine.
+Claude does not write post prose (new paragraphs, intros, conclusions) unless the author asks for it in that session. Outlines, questions, suggested sentences inside a review, frontmatter and fixes to the author's own sentences are fine. The interview and draft skills arrange the author's own words and never add sentences of their own.
 
 Never invent experiences, opinions, anecdotes, numbers or quotes and attribute them to the author. If a post needs one, ask.
 
@@ -31,7 +34,8 @@ Work before the public-ready gate stays on the author's machine: brainstorm note
 
 idea and draft in `.private/<slug>/` (local) → public-ready gate → issue + branch `post/<slug>` + draft PR → Amplify preview → editorial review → merge to `main` (publishes)
 
-- **Local work:** `.private/<slug>/brainstorm.md` for the angle and outline, `.private/<slug>/<slug>.md` for the draft. Nothing here is committed.
+- **Local work:** `.private/<slug>/brainstorm.md` (angle and outline), `interview.md` (the author's answers), `sources.json` and `research.md` (sources and gaps), `<slug>.md` (the draft). Nothing here is committed.
+- **Provenance markers:** the draft carries `<!-- from: ... -->` comments and `<!-- gap: ... -->` markers. `/publish-ready` removes the `from` comments, and it refuses to publish while any gap is open.
 - **Idea:** once public-ready, a GitHub issue from the "Post idea" form (`.github/ISSUE_TEMPLATE/post.yml`, label `post`), with a pitch the author approved word for word.
 - **Branch:** `post/<slug>` off `main`. Slug is kebab-case, short, no dates: `learnings-as-interviewer`.
 - **File:** by type,
@@ -54,7 +58,7 @@ Schema: `src/content.config.ts`. Essentials:
 - `updatedDate`: only when a published post gets a meaningful change.
 - `status`: optional garden label, `draft | evolving | stable`. Notes default to `draft` or `evolving`. Leave it out if unsure; only dates show.
 - `tags`: lowercase, reuse existing tags before adding a new one (`grep -rh "^tags" src/content`).
-- `sources`: published work the post relies on (`title`, `url`, optional `author`, `publisher`, `date`). Required for guides, at least one. Cite them in the text with Markdown footnotes (`[^1]`). Never cite a source nobody opened: each URL must load and say what the post claims it says.
+- `sources`: published work the post relies on (`title`, `url`, optional `author`, `publisher`, `date`). Required for guides, at least one. Cite them in the text with Markdown footnotes (`[^1]`). Never cite a source nobody opened: `yarn verify:sources <post>` checks that each URL loads and, when a quote is recorded, that the quote is on the page.
 - `role` and `period`: required for case studies. What the author did and when, without names the author hasn't approved.
 - No hero images on posts.
 
@@ -76,7 +80,9 @@ Run before marking a post PR ready:
 
 ```sh
 yarn run check            # content schema + types: catches bad frontmatter
-yarn check:pi <post file> # private information; every hit goes to the author
+yarn lint:prose <post file>     # banned phrases and em-dash density; each flag is a question
+yarn verify:sources <post file> # every cited source loads and holds its quote
+yarn check:pi <post file>       # private information; every hit goes to the author
 yarn build                # must pass; it's what Amplify runs
 ```
 
