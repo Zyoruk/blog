@@ -1,0 +1,166 @@
+/*
+  Print: a post should print, or save as PDF, without any adjustment.
+  Paper is always light, regardless of the site theme. Interactive chrome is
+  hidden, links keep their address, and long blocks don't split across pages.
+*/
+
+.print-only {
+	display: none;
+}
+
+@media print {
+	:root,
+	:root[data-theme="dark"],
+	:root[data-theme="light"] {
+		color-scheme: light;
+		--bg: #ffffff;
+		--surface: #ffffff;
+		--border: #c9ced6;
+		--ink: #000000;
+		--text: #1a1a1a;
+		--muted: #4b5563;
+		--accent: #3730a3;
+		--accent-2: #0f766e;
+		--accent-bg: #ffffff;
+	}
+
+	@page {
+		margin: 2.2cm 2cm 2.4cm;
+		@bottom-left {
+			content: "blog.devpand.com";
+			font-family: var(--mono);
+			font-size: 8pt;
+			color: #4b5563;
+		}
+		@bottom-right {
+			content: counter(page);
+			font-family: var(--mono);
+			font-size: 8pt;
+			color: #4b5563;
+		}
+	}
+
+	html,
+	body {
+		background: #ffffff;
+		color: #1a1a1a;
+		font-size: 11pt;
+		line-height: 1.55;
+	}
+
+	body {
+		min-height: 0;
+	}
+
+	/* Chrome that makes no sense on paper. */
+	/* Site chrome only: the post's own header (title, date) must print. */
+	body > header,
+	body > footer,
+	article > footer,
+	.hero,
+	.no-print,
+	.rss,
+	.filters,
+	.more,
+	.down,
+	button,
+	nav {
+		display: none !important;
+	}
+
+	.print-only {
+		display: block;
+		font-family: var(--mono);
+		font-size: 8.5pt;
+		color: #4b5563;
+		margin: 0 0 1.5rem;
+	}
+
+	main,
+	article,
+	.prose {
+		max-width: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	h1 {
+		font-size: 22pt;
+		line-height: 1.2;
+	}
+
+	h2,
+	h3,
+	h4 {
+		break-after: avoid;
+		page-break-after: avoid;
+	}
+
+	h2 {
+		font-size: 15pt;
+		margin-top: 1.6em;
+	}
+
+	p,
+	li {
+		orphans: 3;
+		widows: 3;
+	}
+
+	figure,
+	pre,
+	table,
+	blockquote,
+	svg,
+	img {
+		break-inside: avoid;
+		page-break-inside: avoid;
+	}
+
+	/* Shiki writes its dark-theme colors inline, so these need !important. */
+	pre {
+		white-space: pre-wrap;
+		word-break: break-word;
+		border: 1px solid #c9ced6;
+		background: #f5f6f8 !important;
+		font-size: 9pt;
+		padding: 0.6rem 0.8rem;
+	}
+
+	pre span {
+		color: #1a1a1a !important;
+	}
+
+	/* External links print their address, so the paper copy still points somewhere. */
+	a {
+		color: #1a1a1a;
+		text-decoration: underline;
+		text-decoration-thickness: 0.5px;
+	}
+
+	a[href^="http"]::after {
+		content: " <" attr(href) ">";
+		font-size: 8.5pt;
+		color: #4b5563;
+		word-break: break-all;
+	}
+
+	/* Footnote back-references are navigation, not content. */
+	a[href^="#"]::after {
+		content: none;
+	}
+
+	a[data-footnote-backref] {
+		display: none;
+	}
+
+	.footnotes {
+		border-top: 1px solid #c9ced6;
+		margin-top: 2em;
+		font-size: 9pt;
+	}
+
+	.sources {
+		break-before: auto;
+	}
+}
