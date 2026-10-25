@@ -27,6 +27,8 @@ jobs:
         run: |
           git diff --name-only --diff-filter=ACMR "origin/${{ github.base_ref }}...HEAD" -- 'src/content/**' > changed.txt
           echo "files=$(paste -sd' ' changed.txt)" >> "$GITHUB_OUTPUT"
+      - name: Linter tests
+        run: node --test scripts/lint-prose.test.mjs
       - name: Prose lint
         if: steps.changed.outputs.files != ''
         run: node scripts/lint-prose.mjs ${{ steps.changed.outputs.files }}
