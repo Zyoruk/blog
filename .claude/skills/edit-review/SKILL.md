@@ -24,6 +24,8 @@ Read the linked issue (brainstorm notes), and two existing posts to re-tune to t
 - Broken Markdown, heading levels (`###` for sections), list formatting.
 - Frontmatter matching the schema and the `CLAUDE.md` rules.
 
+Never bring anything from `.private/` into the PR, even to explain a suggestion.
+
 Keep the author's sentence when it's correct, even if you'd phrase it differently.
 
 **Suggest, don't apply** (the author decides):
@@ -42,5 +44,5 @@ When the author is happy:
 
 1. Set `pubDate` to today (the expected merge day) and decide `status` with the author.
 2. Make sure there's no `hidden: true` unless the author wants to merge it unfinished.
-3. Run `yarn run check` and `yarn build`; fix anything they report.
+3. Run `yarn run check`, `yarn check:pi <post file>` and `yarn build`. Fix what check and build report; show every `check:pi` hit to the author and let them decide.
 4. Commit, push, `gh pr ready <n>`. Give the author the PR URL and the Amplify preview link from the PR. Don't merge.

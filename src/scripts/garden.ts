@@ -110,7 +110,7 @@ function playIntro(
 	);
 
 	// 2. Topics burst out of the logo first, then the writing hanging off them.
-	const rank = { tag: 0, page: 1, essay: 2, note: 2 } as Record<string, number>;
+	const rank = { tag: 0, page: 1, essay: 2, note: 2, guide: 2, case: 2 } as Record<string, number>;
 	const others = [...nodes.values()]
 		.filter((node) => node !== center)
 		.sort((a, b) => rank[a.el.classList[1]] - rank[b.el.classList[1]]);

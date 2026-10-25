@@ -1,6 +1,6 @@
 ---
 import FormattedDate from "../components/FormattedDate.astro";
-import { type Kind, transitionName } from "../writing";
+import { type Kind, kindLabel, transitionName } from "../writing";
 import Base from "./Base.astro";
 
 // Used by essays and notes (props spread from the collection entry) and by
@@ -13,10 +13,15 @@ interface Data {
 	status?: string;
 	tags?: string[];
 	kind?: Kind;
+	// Case studies.
+	role?: string;
+	period?: string;
+	// Guides (required) and any post that cites published work.
+	sources?: { title: string; url: string; author?: string; publisher?: string; date?: Date }[];
 }
 
 const data: Data = Astro.props.frontmatter ?? Astro.props;
-const { title, description = title, status, tags, kind } = data;
+const { title, description = title, status, tags, kind, role, period, sources } = data;
 const pubDate = data.pubDate && new Date(data.pubDate);
 const updatedDate = data.updatedDate && new Date(data.updatedDate);
 ---
@@ -26,17 +31,39 @@ const updatedDate = data.updatedDate && new Date(data.updatedDate);
 		<header>
 			<h1 style={kind && `view-transition-name: ${transitionName(Astro.url.pathname)}`}>{title}</h1>
 			<p class="mono meta">
-				{kind && <span class="kind">{kind}</span>}
+				{kind && <span class="kind">{kindLabel(kind)}</span>}
 				{pubDate && <FormattedDate date={pubDate} />}
 				{updatedDate && <span>updated <FormattedDate date={updatedDate} /></span>}
 				{status && <span class={`status ${status}`}>{status}</span>}
 				{tags?.map((tag) => <span>#{tag}</span>)}
 			</p>
+			{(role || period) && (
+				<p class="mono meta case">
+					{role && <span>role: {role}</span>}
+					{period && <span>period: {period}</span>}
+				</p>
+			)}
 		</header>
 
 		<div class="prose">
 			<slot />
 		</div>
+
+		{sources && sources.length > 0 && (
+			<section class="sources" aria-labelledby="sources-heading">
+				<h2 id="sources-heading">Sources</h2>
+				<ol>
+					{sources.map((source) => (
+						<li>
+							<a href={source.url}>{source.title}</a>
+							{[source.author, source.publisher, source.date?.getUTCFullYear()]
+								.filter(Boolean)
+								.map((part) => <span>, {part}</span>)}
+						</li>
+					))}
+				</ol>
+			</section>
+		)}
 
 		{kind && (
 			<footer>
@@ -84,6 +111,29 @@ const updatedDate = data.updatedDate && new Date(data.updatedDate);
 
 	.prose :global(h2) {
 		font-size: 1.35rem;
+	}
+
+	.case {
+		margin-top: 0.4rem;
+	}
+
+	.sources {
+		margin-top: 3rem;
+		padding-top: 1.5rem;
+		border-top: 1px solid var(--border);
+		font-size: 0.9375rem;
+	}
+
+	.sources h2 {
+		font-size: 1rem;
+		font-family: var(--mono);
+		font-weight: 500;
+		color: var(--muted);
+	}
+
+	.sources li {
+		margin-bottom: 0.4rem;
+		overflow-wrap: anywhere;
 	}
 
 	.prose :global(li) {

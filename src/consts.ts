@@ -3,4 +3,4 @@
 
 export const SITE_TITLE = "Zyoruk";
 export const SITE_DESCRIPTION =
-	"Essays and notes on AI, cloud, architecture and engineering teams.";
+	"Essays, notes, guides and case studies on AI, cloud, architecture and engineering teams.";

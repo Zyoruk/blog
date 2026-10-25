@@ -1,0 +1,24 @@
+#!/bin/sh
+# Keeps private, not-yet-public-ready work out of commits.
+# Installed by `yarn install` (the `prepare` script sets core.hooksPath).
+
+# 1. Nothing under .private/ is ever committed, even with `git add -f`.
+private=$(git diff --cached --name-only --diff-filter=ACMR | grep '^\.private/')
+if [ -n "$private" ]; then
+	echo "pre-commit: refusing to commit files under .private/:"
+	echo "$private" | sed 's/^/  /'
+	echo "Unstage them with: git restore --staged .private"
+	exit 1
+fi
+
+# 2. Staged content and templates are scanned for private information.
+staged=$(git diff --cached --name-only --diff-filter=ACMR | grep -E '^(src/content|src/pages|\.github)/')
+if [ -n "$staged" ]; then
+	# shellcheck disable=SC2086
+	if ! node scripts/check-pi.mjs $staged; then
+		echo ""
+		echo "pre-commit: possible private information in staged files (above)."
+		echo "If every hit is public or approved, commit with --no-verify."
+		exit 1
+	fi
+fi

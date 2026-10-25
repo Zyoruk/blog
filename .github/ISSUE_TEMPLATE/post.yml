@@ -1,16 +1,31 @@
 name: Post idea
-description: Capture an idea for a blog post.
+description: Track a post that is ready to be written in public.
 title: "Post: "
 labels: ["post"]
 body:
   - type: markdown
     attributes:
       value: |
-        When you're ready to write: branch `post/<slug>` off `main`, copy
-        `.github/post-template.md` to `src/content/blog/<slug>.md` (essay) or
-        `src/content/notes/<slug>.md` (note), and open a
-        draft PR that says `Closes #<this issue>`. The Amplify preview URL on
-        the PR is the review copy; merging to `main` publishes.
+        This issue is public. Open it only once the idea is public-ready: no
+        client, employer or colleague names, internal project names or
+        unreleased numbers (see "Private until public-ready" in `CLAUDE.md`).
+        Brainstorms, interviews and early drafts stay in `.private/` on your machine.
+
+        When you're ready to write: branch `post/<slug>` off `main`, copy the
+        template for the type into its folder, and open a draft PR that says
+        `Closes #<this issue>`. The Amplify preview URL on the PR is the review
+        copy; merging to `main` publishes.
+  - type: dropdown
+    id: type
+    attributes:
+      label: Type
+      options:
+        - Essay (opinion backed by experience)
+        - Note (short and rough)
+        - Guide (explains a topic, sources required)
+        - Case study (one real piece of work)
+    validations:
+      required: true
   - type: textarea
     id: pitch
     attributes:
@@ -27,4 +42,4 @@ body:
     id: outline
     attributes:
       label: Outline / notes
-      description: Rough points, links, anything worth keeping.
+      description: Rough points, links, anything worth keeping. Public-ready content only.

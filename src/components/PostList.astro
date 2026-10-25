@@ -1,5 +1,5 @@
 ---
-import { type WritingItem, transitionName } from "../writing";
+import { type WritingItem, kindLabel, transitionName } from "../writing";
 import FormattedDate from "./FormattedDate.astro";
 
 interface Props {
@@ -18,7 +18,7 @@ const { items } = Astro.props;
 					{item.title}
 				</a>
 				<span class="mono">
-					{item.kind}{item.status && ` · ${item.status}`}
+					{kindLabel(item.kind)}{item.status && ` · ${item.status}`}
 				</span>
 			</div>
 		</li>

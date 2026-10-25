@@ -28,10 +28,12 @@
     "perf-test": "npm run build && npm run preview",
     "type-check": "tsc --noEmit",
     "check": "astro check",
+    "check:pi": "node scripts/check-pi.mjs",
     "lint": "npx @biomejs/biome check src/",
     "format": "npx @biomejs/biome format src/ --write",
     "clean": "rm -rf dist .astro",
-    "analyze": "npx astro build --experimental-content-intellisense"
+    "analyze": "npx astro build --experimental-content-intellisense",
+    "prepare": "git config core.hooksPath .githooks || true"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.0",

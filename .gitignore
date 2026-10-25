@@ -29,3 +29,7 @@ pnpm-debug.log*
 # Claude Code: skills are tracked, local state is not
 .claude/worktrees/
 .claude/settings.local.json
+
+# Private, not-yet-public-ready work: brainstorms, interviews, research, drafts,
+# and the denylist used by `yarn check:pi`. Never commit it (see CLAUDE.md).
+.private/
