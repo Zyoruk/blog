@@ -1,6 +1,6 @@
 ---
 import { layoutGraph } from "../graph";
-import type { WritingItem } from "../writing";
+import { KINDS, type Kind, type WritingItem, kindLabel } from "../writing";
 import GraphSvg from "./GraphSvg.astro";
 
 interface Props {
@@ -11,15 +11,16 @@ const { items } = Astro.props;
 const wide = layoutGraph(items, 960, 560, 30);
 const tall = layoutGraph(items, 420, 640, 16);
 
-const essays = items.filter((item) => item.kind === "essay").length;
-const notes = items.length - essays;
+// Count each kind; kinds with nothing published stay out of the HUD and the legend.
+const counts = (Object.keys(KINDS) as Kind[])
+	.map((kind) => ({ kind, n: items.filter((item) => item.kind === kind).length }))
+	.filter(({ n }) => n > 0);
 const tags = new Set(items.flatMap((item) => item.tags ?? [])).size;
 const pad = (label: string, n: number) =>
 	`> ${label} ${".".repeat(Math.max(2, 22 - label.length))} ${n}`;
 const bootLines = [
 	"> booting ~/zyoruk",
-	pad("loading essays", essays),
-	pad("loading notes", notes),
+	...counts.map(({ kind, n }) => pad(`loading ${KINDS[kind].plural}`, n)),
 	pad("linking tags", tags),
 	"> ready",
 ];
@@ -43,7 +44,9 @@ const bootLines = [
 <section class="hero" data-hero>
 	<p class="hud top">
 		<span class="prompt">~/garden</span>
-		<span>{essays} essays · {notes} {notes === 1 ? "note" : "notes"} · {tags} tags</span>
+		<span>
+			{counts.map(({ kind, n }) => `${n} ${n === 1 ? kindLabel(kind) : KINDS[kind].plural} · `)}{tags} tags
+		</span>
 	</p>
 
 	<GraphSvg layout={wide} width={960} height={560} class="wide" />
@@ -61,8 +64,7 @@ const bootLines = [
 
 	<p class="hud bottom">
 		<span class="legend">
-			<span class="k essay">essay</span>
-			<span class="k note">note</span>
+			{counts.map(({ kind }) => <span class={`k ${kind}`}>{kindLabel(kind)}</span>)}
 			<span class="k tag">tag</span>
 			<span class="k page">page</span>
 		</span>
@@ -83,6 +85,8 @@ const bootLines = [
 		--h-line: #2a303a;
 		--h-cyan: #66d9ed;
 		--h-lime: #a4d92c;
+		--h-amber: #f2b84b;
+		--h-violet: #b79cff;
 
 		position: relative;
 		height: calc(100svh - 3.5rem);
@@ -156,6 +160,14 @@ const bootLines = [
 
 	.hero :global(.note .mark) {
 		fill: var(--h-lime);
+	}
+
+	.hero :global(.guide .mark) {
+		fill: var(--h-amber);
+	}
+
+	.hero :global(.case .mark) {
+		fill: var(--h-violet);
 	}
 
 	.hero :global(.draft .mark) {
@@ -371,6 +383,12 @@ const bootLines = [
 	}
 	.k.note::before {
 		background: var(--h-lime);
+	}
+	.k.guide::before {
+		background: var(--h-amber);
+	}
+	.k.case::before {
+		background: var(--h-violet);
 	}
 	.k.tag::before {
 		border: 1.5px solid var(--h-cyan);

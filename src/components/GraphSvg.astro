@@ -75,7 +75,7 @@ const LOGO_R = 30;
 					{node.type === "page" ? (
 						<rect class="mark" x="-6" y="-6" width="12" height="12" rx="2" />
 					) : (
-						<circle class="mark" r={node.type === "tag" ? 8 : node.type === "essay" ? 6.5 : 5} />
+						<circle class="mark" r={node.type === "tag" ? 8 : node.type === "note" ? 5 : 6.5} />
 					)}
 					<text x={left ? -14 : 14} dy="0.35em" text-anchor={left ? "end" : "start"}>
 						{node.label}

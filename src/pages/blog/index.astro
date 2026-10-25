@@ -1,23 +1,35 @@
 ---
 import PostList from "../../components/PostList.astro";
 import Base from "../../layouts/Base.astro";
-import { getWriting } from "../../writing";
+import { KINDS, type Kind, getWriting, kindLabel } from "../../writing";
 
 const items = await getWriting();
-const filters = ["all", "essay", "note", ...new Set(items.flatMap((item) => item.tags ?? []))];
+// Only offer the kinds that have something published.
+const kinds = (Object.keys(KINDS) as Kind[]).filter((kind) =>
+	items.some((item) => item.kind === kind)
+);
+const filters = [
+	{ value: "all", label: "all" },
+	...kinds.map((kind) => ({ value: kind, label: kindLabel(kind) })),
+	...[...new Set(items.flatMap((item) => item.tags ?? []))].map((tag) => ({
+		value: tag,
+		label: tag,
+	})),
+];
 ---
 
-<Base title="Writing | Zyoruk" description="Essays and notes on AI, cloud, architecture and engineering teams.">
+<Base title="Writing | Zyoruk" description="Essays, notes, guides and case studies on AI, cloud, architecture and engineering teams.">
 	<h1>Writing</h1>
 	<p>
-		Essays are longer and more finished. Notes are short and rough. Each one may show a status:
+		Essays are longer and more finished. Notes are short and rough. Guides explain a topic with
+		sources. Case studies walk through one real piece of work. Each one may show a status:
 		<span class="mono">draft</span>, <span class="mono">evolving</span> or <span class="mono">stable</span>.
 	</p>
 
 	<div class="filters" role="group" aria-label="Filter writing">
 		{filters.map((filter) => (
-			<button type="button" data-filter={filter} aria-pressed={filter === "all" ? "true" : "false"}>
-				{filter}
+			<button type="button" data-filter={filter.value} aria-pressed={filter.value === "all" ? "true" : "false"}>
+				{filter.label}
 			</button>
 		))}
 	</div>

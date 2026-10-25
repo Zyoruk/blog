@@ -8,9 +8,9 @@ import {
 	forceX,
 	forceY,
 } from "d3-force";
-import type { WritingItem } from "./writing";
+import { type Kind, type WritingItem, kindLabel } from "./writing";
 
-export type NodeType = "center" | "tag" | "essay" | "note" | "page";
+export type NodeType = "center" | "tag" | "page" | Kind;
 
 export interface GraphNode extends SimulationNodeDatum {
 	id: string;
@@ -81,7 +81,7 @@ export function layoutGraph(items: WritingItem[], width: number, height: number,
 			href: item.href,
 			title: item.title,
 			description: item.description,
-			meta: [item.kind, date, item.status].filter(Boolean).join(" · "),
+			meta: [kindLabel(item.kind), date, item.status].filter(Boolean).join(" · "),
 			status: item.status,
 			x: 0,
 			y: 0,
